@@ -10,6 +10,9 @@ $( document ).ready(function() {
     // var toastList = toastElList.map(function (toastEl) {
     //     return new bootstrap.Toast(toastEl, option)
     // })
+
+    
+
     $("div[id^='myModal']").each(function(){
   
         var currentModal = $(this);

@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'storages',
 ]
 
+AUTH_USER_MODEL = 'main.User'
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',

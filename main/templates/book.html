@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{%block styles %}
+    <link rel="stylesheet" href="{%static 'css/book.css'%}">
+{% endblock %}
+
+{%block book%}active{%endblock%}
+
+{% block content %}
+	<div class="wrap">
+        <div class="content-title">
+            Брони
+        </div>
+        <div class="content-under-title">
+            {{company.name}}
+        </div>
+        <div class="scrollable">
+            <table id="table_current">
+                <tr class="head">
+                  <th>Телефон</th>
+                  <th>Имя</th>
+                  <th>Дата брони</th>
+                  <th>Время брони</th>
+                  <th>Статус</th>
+                </tr>
+                {%if not current_timers%}
+                    <tr id="no_book">
+                        <td colspan="5">В данный момент нет броней!</td>
+                    </tr>
+                {%endif%}
+                {%for timer in current_timers%}
+                    <tr id="current{{timer.id}}">
+                        <td>{{timer.user.phone}}</td>
+                        <td>{{timer.user.name}}</td>
+                        <td>{{timer.book_date|date:'Y-m-d'}}</td>
+                        <td>{{timer.start_time|date:'H:i'}} - {{timer.end_time|date:'H:i'}}</td>
+                        
+                        <td>
+                            <button id="decline_{{timer.id}}" class="decline_book" onclick="decline(this)">Отклонить</button>
+                        </td>
+                    </tr>
+                {%endfor%}
+            </table>
+        </div>          
+    </div>
+{% endblock %}
+
+{%block scripts%}
+    <script language="javascript">
+        var ws_url = 'wss://' + window.location.host + '/ws/timers/';
+        var ticksSocket = new WebSocket(ws_url);
+
+        ticksSocket.onmessage = function(event) {
+            var data = JSON.parse(event.data);
+            if({{current_user.company.id}} == data["company_id"]){
+                if(data["decline_book"] != null){
+                    tr = $("#current"+ data["timer_id"]);
+                    tr.remove();
+                    if($("#table_current tr").length == 1){
+                        const empty_tr = document.createElement("tr");
+                        empty_tr.id = "no_bbok";
+                        empty_tr.innerHTML = `<td colspan="5">В данный момент нет броней!</td>`;
+                        document.getElementById('table_current').appendChild(empty_tr);
+                    }
+                }
+                
+                if(data["new_book"] != null){
+                    if($("#no_book")[0] != null){
+                        empty_tr = $("#no_book")[0];
+                        empty_tr.remove();
+                    }
+                    time = data["timer_start"]+" - "+data["timer_end"] + " " + data["timer_day"];
+                    const tr = document.createElement('tr');
+                    tr.id = "current"+ data["timer_id"];
+                    tr.innerHTML = `
+                    <td>`+data["timer_user"]+`</td>
+                    <td>`+data["timer_user_name"]+`</td>
+                    <td>`+time+`</td>
+                    
+                    <td>
+                        <button id="decline_`+data["timer_id"]+`" class="decline_book" onclick="decline(this)">Отклонить</button>
+                    </td>
+                    `;
+
+                    document.getElementById('table_current').appendChild(tr);
+
+                    
+                }
+                if(data["book_expired"] != null){
+                    tr = $("#current"+data["timer_id"]);
+                    tr2 = $("#accepted"+data["timer_id"]);
+    
+                    tr.remove()
+                    tr2.remove()
+                }
+            }
+           
+            // do whatever required with received data ...
+        };
+        ticksSocket.onerror = function(event) {
+            var data = JSON.parse(event.data);
+            console.log('data', data);
+            
+        };
+    </script>
+    <script language="javascript">
+        function accept(button){
+            token = get_token();
+            var timer_id = parseInt(button.id.split("_")[1])
+            $.ajax({
+                url: "/api/accept_book/", 
+                type: "POST",
+                headers: {"Authorization": "Token "+token},
+                data: {"timer_id": timer_id}
+            });
+        }
+        function decline(button){
+            token = get_token();
+            var timer_id = parseInt(button.id.split("_")[1])
+            $.ajax({
+                url: "/api/decline_book/", 
+                type: "POST",
+                headers: {"Authorization": "Token "+token},
+                data: {"timer_id": timer_id}
+            });
+        }
+    </script>
+{%endblock%}
+

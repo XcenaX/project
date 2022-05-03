@@ -1,105 +1,108 @@
 {% load static %}
-{% load sass_tags %}
 
+{% block links %}
 
-
-{%block links%}
     <head>
+        <script src="{%static 'js/jquery.min.js'%}"></script>
+        <link rel="stylesheet" type="text/css" href="{%static 'css/main/alertify/alertify.min.css'%}">
+        <link rel="stylesheet" type="text/css" href="{%static 'fonts/montserrat_family.css'%}">
+        <link rel="stylesheet" type="text/css" href="{%static 'css/main/alertify/themes/default.min.css'%}">
+         
+        <link rel="shortcut icon" href="{%static 'img/login_logo.png'%}" type="image/x-icon">
+        <script src="{%static 'js/jquery.min.js'%}"></script>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Greate  Ocean</title>
-        <script src="{%static 'js/jquery.min.js'%}"></script>
-        <link rel="stylesheet" href="{% sass_src 'css/main.scss'%}">
-        <link rel="stylesheet" href="{% sass_src 'css/bootstrap/bootstrap.scss'%}">
-        <script src="{%static 'js/bootstrap/bootstrap.min.js'%}"></script>
-        <script src="{%static 'js/bootstrap/bootstrap.bundle.js'%}"></script>        
-        <script src="{%static 'js/main.js'%}"></script>
-        <script src="{%static 'js/popper.min.js'%}"></script>
-        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
+        <title>Проект</title>
+        <link rel="stylesheet" href="{%static 'fonts/montserrat_family.css'%}">
+        <link rel="stylesheet" href="{%static 'css/main/main.css'%}">    
+        <link rel="stylesheet" href="{%static 'css/main/bootstrap.min.css'%}">    
+        <script src="{%static 'js/functions.js'%}"></script>    
+        <script src="{%static 'js/custom-select.js'%}"></script> 
+
+        <script src="{%static 'js/alertify.js'%}"></script>
+        <script src="{%static 'js/functions.js'%}"></script>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        		
+        <link rel="stylesheet" href="{%static 'bootstrap/css/bootstrap.min.css'%}" />                
         
-        {%block styles%}
-        {%endblock%}
+        {% block styles %}
+
+        {% endblock %}
     </head>
-{%endblock%}
+{% endblock %}
+
 
 <body>
-    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">О сайте</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+{% block body%}
+       
+        <div class="show-on-mobile">
+            <h1 class="mobile-alert">Мобильная версия пока не доступна!</h1>
+        </div>
+    
+        <div class="delete-notification-wrap" id="delete_notification">
+            <div class="delete-notifications-block">
+                <div class="header">
+                    <div></div>
+                    <div class="title">Сообщение</div>
+                    <div class="close" onclick="hideElement('delete_notification')"></div>
                 </div>
-                <div class="modal-body">
-                    Это сайт где можно купить рыб
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>                    
+                <div class="text">Вы точно хотите что-то сделать?</div>
+                <div class="buttons">
+                    <div class="delete" id="delete_button">Продолжить</div>
+                    <div class="cancel" onclick="hideElement('delete_notification')">Отмена</div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11; padding: 1vw !important;">
-        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header" style="padding: 0.5vw 0.75vw;">
-            <img src="{%static 'images/loading.gif'%}" style="width: 1vw; margin-right: 0.5vw !important;" class="rounded me-2" alt="...">
-            <strong class="me-auto">Сообщение</strong>            
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть" style="margin-right: -0.375vw; margin-left: 0.75vw;"></button>
-            </div>
-            <div class="toast-body" style="padding: 0.75vw !important;">
-            Функционал загрузки пока не доступен!
-            </div>
-        </div>
-    </div>
-    {%block body%}
-        
-        <div class="wrapper">
-            <nav class="header">
-                <a href="{%url 'main:index'%}" class="left-side">
-                    
-                        <div class="logo"></div>
-                        <div class="title">Greate Ocean</div>
-                    
-                </a>
-                
-                <div class="right-side">
-                    <a href="#" class="download">
-                        <div class="cart-block">
-                            <div class="cart"></div>
-                            <div>Корзина</div>
-                            {%if cart.len > -1%}
-                                <div class="count">{{cart.len}}</div>
-                            {%endif%}
+
+        <div class="main-wrap hide-on-mobile">
+            <div class="main-sidebar">
+                <div class="header">
+                    <div class="left-side">
+                        <div class="avatar-wrap">
+                            <img class="avatar" src="{%static 'img/user.png'%}">
+                        </div>                
+                        <div class="content">
+                            <div class="up-text">XcenaX</div>
+                            <div class="down-text">Сотрудник</div>
                         </div>
-                    </a>      
-                    <button type="button" class="info" data-bs-toggle="modal" data-bs-target="#infoModal"></button>
-                    <!-- onclick="SwitchClass('liveToast', 'hide'); SwitchClass('liveToast', 'show')" -->
-                    <button type="button" class="btn btn-primary download" id="liveToastBtn" onclick="showMessage('liveToast')">Загрузить</button>
+                    </div>
+                
                     
                 </div>
-                      
-            </nav>
-            <div class="main">
-                {%block main%}
                 
-                {%endblock%}
-            </div>
-            <div class="footer">
-                <div class="text">Лебедев Владислав</div>
-                <div class="social">
-                    <a href="#">
-                        <div class="instagram"></div>
-                    </a>
-                    <a href="#">
-                        <div class="facebook"></div>    
-                    </a>
-                    <a href="#">
-                        <div class="twitter"></div>    
-                    </a>
+                <div class="menu">
+                    <div class="item">Главная</div>
+                    <a href="{% url 'main:index'%}" class="sub-item {%block training%}{%endblock%}">Мои задачи</a>
+                    <a href="{% url 'main:reservations'%}" class="sub-item {%block reservations%}{%endblock%}">Какая-то вкладка</a>
+                    
+
+                    <a href="{% url 'main:settings'%}" class="item {%block settings%}{%endblock%}">Настройки</a>
+                    <a href="{% url 'main:history'%}" class="item {%block history%}{%endblock%}">История</a>
+                    <a class="item" id="exit_button">Выход</a>
+                </div>
+                <div class="bottom">
+                    <div class="phone-block">
+                        <div class="phone"></div>
+                        <div class="text">+ 7 987 654 32 10</div>
+                    </div>
+                    <div class="logo"></div>
                 </div>
             </div>
+            {%block main%}
+                
+            {%endblock%}
         </div>
-        
-    {%endblock%}
+            
+{% endblock %}
 </body>
+<script>
+    $("#exit_button").on("click", function(e) {            
+        delete_cookie("user");
+        document.location = "/login";
+    });
+</script>
+{%block scripts%}
+{%endblock%}

@@ -11,6 +11,7 @@ from main.modules.hashutils import check_pw_hash, make_pw_hash
 from .modules.functions import *
 from main.models import *
 
+
 class LoginView(View):
     template_name = "login.html"
     def get(self, request, *args, **kwargs):                            
@@ -59,14 +60,12 @@ class LogoutView(View):
         return redirect(reverse("main:login"))
 
 
-
-
 class IndexView(View):
     template_name = "index.html"
     def get(self, request, *args, **kwargs):    
         current_user = get_current_user(request)
-        if not current_user:
-            return redirect(reverse("main:login"))
+        # if not current_user:
+        #     return redirect(reverse("main:login"))
         tasks = Task.objects.filter(user=current_user)
         
         return render(request, self.template_name, {
@@ -95,6 +94,41 @@ class TaskView(View):
     def post(self, request, id):
         return JsonResponse({"error": "POST method not allowed!"})
 
+
+class SettingsView(View):
+    template_name = "settings.html"
+    def get(self, request, *args, **kwargs):
+        # if not request.session.get("token"):
+        #     return redirect(reverse("adminpanel:login"))
+        return render(request, self.template_name, {
+            "test": "test"
+        })
+    def post(self, request, *args, **kwargs):
+        return JsonResponse({"error": "POST method not allowed!"})
+
+
+class ReservationsView(View):
+    template_name = "reservations.html"
+    def get(self, request, *args, **kwargs):
+        # if not request.session.get("token"):
+        #     return redirect(reverse("adminpanel:login"))
+        return render(request, self.template_name, {
+            "test": "test"
+        })
+    def post(self, request, *args, **kwargs):
+        return JsonResponse({"error": "POST method not allowed!"})
+
+
+class HistoryView(View):
+    template_name = "history.html"
+    def get(self, request, *args, **kwargs):
+        # if not request.session.get("token"):
+        #     return redirect(reverse("adminpanel:login"))
+        return render(request, self.template_name, {
+            "test": "test"
+        })
+    def post(self, request, *args, **kwargs):
+        return JsonResponse({"error": "POST method not allowed!"})
 
 # Когда в админке удаляем или обновляем фото рыбы нужно удалить ненужное фото из Яндекс бакета
 @receiver(post_delete, sender=User)

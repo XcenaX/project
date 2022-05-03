@@ -1,6 +1,7 @@
 from django.db import models
 from distribution.yandex_s3_storage import ClientDocsStorage
 import datetime
+from django.contrib.auth.models import AbstractUser
 
 class Role(models.Model):
     name = models.TextField(default='') 
@@ -13,7 +14,7 @@ class Technology(models.Model):
         return self.name
 
 
-class User(models.Model):
+class User(AbstractUser):
     full_name = models.TextField()
     role = models.ForeignKey(Role, on_delete=models.CASCADE, blank=True, null=True)
     login = models.TextField(blank=True, null=True)

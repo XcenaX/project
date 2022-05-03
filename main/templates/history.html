@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{%block styles %}
+    <link rel="stylesheet" href="{%static 'css/main/history.css'%}">
+{% endblock %}
+
+{%block history%}active{%endblock%}
+
+{% block main %}
+	
+        
+<div class="content-wrap">        
+    <div class="content-block">
+        <div class="title-block">
+            <div class="title">История задач</div>
+            <div class="search-block">
+                <div class="icon"></div>
+                <input class="input" placeholder="Поиск...">
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+    
+{% endblock %}
+

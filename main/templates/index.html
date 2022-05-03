@@ -1,15 +1,20 @@
-{%load static%}
-{% load sass_tags %}
+{% extends "base.html" %}
+{% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Задачи</title>
-</head>
-<body>
-    
-</body>
-</html>
+{%block training%}active{%endblock%}
+
+{%block main%}
+    <div class="content-wrap">        
+        <div class="content-block">
+            <div class="title-block">
+                <div class="title">Мои задачи</div>
+                <div class="search-block">
+                    <div class="icon"></div>
+                    <input class="input" placeholder="Поиск...">
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+{%endblock%}

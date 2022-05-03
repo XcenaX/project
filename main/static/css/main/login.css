@@ -1,0 +1,126 @@
+html{
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    background: #F9F9F9 !important;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.gantel1, .gantel2{
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+.gantel1{
+    background-image: url(../images/gantel.png);
+    top: -3vh;
+    left: -3vh;
+    width: 80vh;
+    height: 80vh;
+    z-index: 0;
+}
+
+.gantel2{
+    background-image: url(../images/gantel2.png);
+    bottom: 0vh;
+    right: 0;
+    width: 80vh;
+    height: 80vh;
+    z-index: 0;
+    background-position: right;
+}
+
+.login-wrap {
+    position: relative;
+    width: 35%;
+    height: -webkit-fill-available;
+    margin: auto;
+    padding-top: 5%;
+    z-index: 1;
+}
+
+.logo{
+    width: 10vh;
+    height: 10vh;
+    margin: auto;
+    margin-bottom: 8vh;
+    background-image: url(../images/login_logo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.login-form{
+    max-width: 100%;
+    padding-top: 7vh;
+    padding-bottom: 7vh;
+    padding-left: 6vh;
+    padding-right: 6vh;
+    background: #FFFFFF;
+    box-shadow: 0px 1hv 2vh rgba(0, 0, 0, 0.02);
+    border-radius: 2vh;
+}
+
+.title{
+    font-weight: 600;
+    font-size: 4vh;
+    line-height: 3vh;
+    color: #7E3EEA;
+    margin-bottom: 3vh;
+    text-align: center;
+}
+
+.input-title{
+    font-weight: 500;
+    font-size: 2vh;
+    line-height: 2vh;
+    margin-bottom: 2vh;
+    color: #A0A3BD;
+}
+
+.input, input:focus{
+    outline: none;
+    background: #FFFFFF;
+    border: 0.2vh solid #D9DBE9;
+    border-radius: 2vh;
+    padding: 1.5vh;
+    padding-left: 3vh;
+    width: -webkit-fill-available;
+    padding-right: 3vh;
+    margin-bottom: 4vh;
+    font-size: 2vh;
+}
+
+.save, .save:focus{
+    outline: none;
+    border: none;
+    width: 70%;
+    background: #7E3EEA;
+    border-radius: 2vh;
+    padding: 1.5vh;
+    padding-left: 6vh;
+    padding-right: 6vh;
+    color: white;
+    font-weight: 500;
+    font-size: 2.5vh;
+    line-height: 2.5vh;
+    letter-spacing: 0.03em;
+    margin-left: 15%;
+}
+
+.login-form .error {
+    font-size: 2.5vh;
+    color: #eb2626;
+    margin: 1vh auto;
+    text-align: center;
+}
+
+@media (max-width: 1280px){
+    .login-wrap{
+        width: 70%;
+    }
+}
