@@ -1,4 +1,3 @@
-from contextlib import redirect_stderr
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import View
