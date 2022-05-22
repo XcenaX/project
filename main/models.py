@@ -3,8 +3,10 @@ from distribution.yandex_s3_storage import ClientDocsStorage
 import datetime
 from django.contrib.auth.models import AbstractUser
 
+from main.modules.hashutils import make_pw_hash
+
 class Role(models.Model):
-    name = models.TextField(default='') 
+    name = models.TextField(default='')
     def __str__(self):
         return self.name
 
@@ -15,11 +17,21 @@ class Technology(models.Model):
 
 
 class User(AbstractUser):
-    full_name = models.TextField()
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, blank=True, null=True)
-    login = models.TextField(blank=True, null=True)
+    full_name = models.TextField(default='')
+    work_experience = models.TextField(default='')
+    telegram = models.TextField(default='')
+    vk = models.TextField(default='')
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, blank=True, null=True, default=Role.objects.filter(name="user").first().pk)    
     password = models.TextField(blank=True, null=True)
-    avatar = models.FileField(storage=ClientDocsStorage())
+    image = models.FileField(storage=ClientDocsStorage(), blank=True, null=True)
+    technologies = models.ManyToManyField(Technology)
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.password = make_pw_hash(self.password)
+        super(User, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.full_name
 
 
 class Task(models.Model):
@@ -29,6 +41,8 @@ class Task(models.Model):
     start_date = models.DateField(default=datetime.date.today)
     end_date = models.DateField(blank=True, default=True)
     technologies = models.ManyToManyField(Technology)
+    def __str__(self):
+        return self.name
 
 class Project(models.Model):
     name = models.TextField(default='')

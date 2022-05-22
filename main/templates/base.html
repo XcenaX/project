@@ -65,8 +65,16 @@
                             <img class="avatar" src="{%static 'img/user.png'%}">
                         </div>                
                         <div class="content">
-                            <div class="up-text">XcenaX</div>
-                            <div class="down-text">Сотрудник</div>
+                            <div class="up-text">{{current_user.full_name}}</div>
+                            <div class="down-text">
+                                {%if current_user.role.name == 'user'%}
+                                    Сотрудник
+                                {%elif current_user.role.name == 'director'%}
+                                    Директор
+                                {%elif current_user.role.name == 'admin'%}
+                                    Админ
+                                {%endif%}
+                            </div>
                         </div>
                     </div>
                 
@@ -76,10 +84,10 @@
                 <div class="menu">
                     <div class="item">Главная</div>
                     <a href="{% url 'main:index'%}" class="sub-item {%block training%}{%endblock%}">Мои задачи</a>
-                    <a href="{% url 'main:reservations'%}" class="sub-item {%block reservations%}{%endblock%}">Какая-то вкладка</a>
+                    <a href="{% url 'main:reservations'%}" class="sub-item {%block reservations%}{%endblock%}">Мои проекты</a>
                     
 
-                    <a href="{% url 'main:settings'%}" class="item {%block settings%}{%endblock%}">Настройки</a>
+                    <a href="{% url 'main:settings'%}" class="item {%block settings%}{%endblock%}">Профиль</a>
                     <a href="{% url 'main:history'%}" class="item {%block history%}{%endblock%}">История</a>
                     <a class="item" id="exit_button">Выход</a>
                 </div>

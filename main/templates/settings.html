@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {%block styles %}
-    <link rel="stylesheet" href="{%static 'css/services.css'%}">
+    <link rel="stylesheet" href="{%static 'css/main/settings.css'%}">
 {% endblock %}
 
 {%block services%}active{%endblock%}
@@ -11,13 +11,47 @@
 <div class="content-wrap">        
     <div class="content-block">
         <div class="title-block">
-            <div class="title">Настройки</div>
-            <div class="search-block">
-                <div class="icon"></div>
-                <input class="input" placeholder="Поиск...">
-            </div>
+            <div class="title">Профиль</div>            
         </div>
         
+        <form class="profile-block" method="post" action="">
+            <div class="left-side">
+                <div class="photo" title="Изменить фотографию" style="background-image: url({%if current_user.image%}{{current_user.image.url}}{%else%}/static/img/user.png{%endif%});">
+                    <input type="file" onchange="submitPhoto(this)" class="add-photo">
+                </div>
+                <div class="title">Контакты</div>
+                <div class="contact">
+                    <div class="text">Telegram: </div>
+                    <a href="{{current_user.telegram}}" class="value">Ссылка</a>
+                </div>
+                <div class="contact">
+                    <div class="text">VK: </div>
+                    <a href="{{current_user.vk}}" class="value">Ссылка</a>
+                </div>
+            </div>
+            <div class="right-side">
+                <div class="main-title">Общая информация</div>
+                <div class="info-block">
+                    <div class="text">Полное имя</div>
+                    <input type="text" class="value" name="name" value="{{current_user.full_name}}">
+                </div>
+                <div class="info-block">
+                    <div class="text">Опыт работы</div>
+                    <input type="text" class="value" name="experience" value="{{current_user.work_experience}}">
+                </div>
+                
+                <div class="title" style="margin-top: 2vw;">Навыки</div>
+                <div class="skills">
+                    {%for skill in current_user.technologies.all%}
+                        <div class="item">{{skill.name}}</div>                                
+                    {%endfor%}
+                </div>
+                <div class="button-align">
+                    <button class="save" type="submit">Сохранить</button>
+                </div>
+                
+            </div>
+        </form>
         
     </div>
 </div>

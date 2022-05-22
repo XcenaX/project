@@ -8,8 +8,8 @@ from django.db.models.signals import *
 from main.modules.hashutils import check_pw_hash, make_pw_hash
 
 from .modules.functions import *
-from main.models import *
 
+from main.models import *
 
 class LoginView(View):
     template_name = "login.html"
@@ -17,15 +17,15 @@ class LoginView(View):
         return render(request, self.template_name, {})
     def post(self, request, *args, **kwargs):
         login = post_parameter(request, "login")
-        password = post_parameter(request, "password")
+        password = post_parameter(request, "password")        
         user = None
         try:
-            user = User.objects.get(login=login)
+            user = User.objects.get(username=login)
         except:
             return render(request, self.template_name, {
                 "error": "Неверный логин или пароль!"
             })
-        if check_pw_hash(user.password, password):
+        if check_pw_hash(password, user.password):
             request.session["user"] = user.id
             return redirect(reverse("main:index"))
         return render(request, self.template_name, {
@@ -46,7 +46,7 @@ class RegisterView(View):
             pass
 
         hash_password = make_pw_hash(password)
-        user = User.objects.create(login=login, password=hash_password)
+        user = User.objects.create(username=login, password=hash_password)
         user.save()
         return redirect(reverse("main:login")) # ПОТОМ НУЖНО ИЗМЕНИТЬ ПЕРЕАДЕСАЦИЮ
         
@@ -63,8 +63,8 @@ class IndexView(View):
     template_name = "index.html"
     def get(self, request, *args, **kwargs):    
         current_user = get_current_user(request)
-        # if not current_user:
-        #     return redirect(reverse("main:login"))
+        if not current_user:
+            return redirect(reverse("main:login"))
         tasks = Task.objects.filter(user=current_user)
         
         return render(request, self.template_name, {
@@ -97,10 +97,12 @@ class TaskView(View):
 class SettingsView(View):
     template_name = "settings.html"
     def get(self, request, *args, **kwargs):
-        # if not request.session.get("token"):
-        #     return redirect(reverse("adminpanel:login"))
+        current_user = get_current_user(request)
+        if not current_user:
+            return redirect(reverse("main:login"))
         return render(request, self.template_name, {
-            "test": "test"
+            "test": "test",
+            "current_user": current_user,
         })
     def post(self, request, *args, **kwargs):
         return JsonResponse({"error": "POST method not allowed!"})
@@ -109,10 +111,12 @@ class SettingsView(View):
 class ReservationsView(View):
     template_name = "reservations.html"
     def get(self, request, *args, **kwargs):
-        # if not request.session.get("token"):
-        #     return redirect(reverse("adminpanel:login"))
+        current_user = get_current_user(request)
+        if not current_user:
+            return redirect(reverse("main:login"))
         return render(request, self.template_name, {
-            "test": "test"
+            "test": "test",
+            "current_user": current_user,
         })
     def post(self, request, *args, **kwargs):
         return JsonResponse({"error": "POST method not allowed!"})
@@ -121,10 +125,12 @@ class ReservationsView(View):
 class HistoryView(View):
     template_name = "history.html"
     def get(self, request, *args, **kwargs):
-        # if not request.session.get("token"):
-        #     return redirect(reverse("adminpanel:login"))
+        current_user = get_current_user(request)
+        if not current_user:
+            return redirect(reverse("main:login"))
         return render(request, self.template_name, {
-            "test": "test"
+            "test": "test",
+            "current_user": current_user,
         })
     def post(self, request, *args, **kwargs):
         return JsonResponse({"error": "POST method not allowed!"})

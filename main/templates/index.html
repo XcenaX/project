@@ -14,6 +14,31 @@
                 </div>
             </div>
             
+            {%for task in tasks%}
+                <div class="task-block">
+                    <div class="head-block">
+                        <div class="left-side">
+                            <div class="title">{{task.name}}</div>
+                            <div class="end-date">До <span>{{task.end_date|date:"d.m.Y"}}</span></div>
+                        </div>
+                        <div class="start-date">
+                            {{task.start_date|date:"d.m.Y"}}
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="title">Описание</div>
+                        <div class="description">
+                            {{task.description|linebreaks}}
+                        </div>
+                        <div class="title">Необходимые навыки</div>
+                        <div class="skills">
+                            {%for skill in task.technologies.all%}
+                                <div class="item">{{skill.name}}</div>                                
+                            {%endfor%}
+                        </div>
+                    </div>
+                </div>
+            {%endfor%}
             
         </div>
     </div>
