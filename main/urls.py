@@ -12,4 +12,5 @@ urlpatterns = [
     path('settings', views.SettingsView.as_view(), name='settings'),     
     path('reservations', views.ReservationsView.as_view(), name='reservations'),
     path('history', views.HistoryView.as_view(), name='history'),
+    path('update_avatar', views.UpdateAvatar.as_view(), name='update_avatar'),
 ]

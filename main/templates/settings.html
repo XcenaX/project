@@ -14,10 +14,10 @@
             <div class="title">Профиль</div>            
         </div>
         
-        <form class="profile-block" method="post" action="">
+        <form class="profile-block" id="img_main_image" method="post" action="{%url 'main:update_avatar'%}">{%csrf_token%}
             <div class="left-side">
-                <div class="photo" title="Изменить фотографию" style="background-image: url({%if current_user.image%}{{current_user.image.url}}{%else%}/static/img/user.png{%endif%});">
-                    <input type="file" onchange="submitPhoto(this)" class="add-photo">
+                <div class="photo" id="main_image" title="Изменить фотографию" style="background-image: url({%if current_user.image%}{{current_user.image.url}}{%else%}/static/img/user.png{%endif%});">
+                    <input type="file" name="image" class="add-photo">
                 </div>
                 <div class="title">Контакты</div>
                 <div class="contact">
@@ -57,3 +57,36 @@
 </div>
         
 {% endblock %}
+
+{%block scripts%}
+    <script language="javascript">
+        $('form#img_main_image input').on('change', function() {
+            add_main_image(this);
+        });
+        
+        function add_main_image(input){              
+            var formData = new FormData($("#img_main_image")[0])
+            $.ajax({
+                url: "{%url 'main:update_avatar'%}", 
+                type: "POST",
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,                
+                success: function(data){
+                    if(data["error"]){
+                        alertify.error(data["error"], 4);
+                    }else{
+                        main_img = $("#main_image")[0];
+                        main_img.style.backgroundImage = "url("+data["image"]+")";
+                        alertify.success("Изображение изменено!", 4);
+                    }
+                    
+                },
+            });   
+            //$('#main_image_form').submit();            
+        }
+    </script>
+{%endblock%}

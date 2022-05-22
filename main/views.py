@@ -4,6 +4,7 @@ from django.views.generic import View
 from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
 from django.dispatch import receiver
 from django.db.models.signals import *
+from grpc import Status
 
 from main.modules.hashutils import check_pw_hash, make_pw_hash
 
@@ -134,6 +135,24 @@ class HistoryView(View):
         })
     def post(self, request, *args, **kwargs):
         return JsonResponse({"error": "POST method not allowed!"})
+
+class UpdateAvatar(View):
+    def get(self, request, *args, **kwargs):
+        return redirect(reverse("main:index"))
+    def post(self, request, *args, **kwargs):
+        image = request.FILES.get("image", None)
+        if not image:
+            return JsonResponse({"error": "Не передано изображение!"}, status=500)
+        
+        if(check_image_type(image) and image):
+            current_user = get_current_user(request)
+            if not current_user:
+                return JsonResponse({"error": "Пользователь не найден!"})
+            current_user.image = image
+            current_user.save()
+            return JsonResponse({"image": current_user.image.url}, status=200)
+        else:            
+            return JsonResponse({"error": "Выберите .jpg, .jpeg или .png формат!"}, status=500)
 
 # Когда в админке удаляем или обновляем фото рыбы нужно удалить ненужное фото из Яндекс бакета
 @receiver(post_delete, sender=User)

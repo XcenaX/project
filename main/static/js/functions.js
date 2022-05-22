@@ -1,22 +1,3 @@
-function get_token(){
-    var token = "";
-    $.ajax({
-        url: "/api/token/", 
-        type: "POST",
-        async: false,
-        data: {"username": "XcenaX", "password": "Dagad582#"},
-        success: function(data){
-            if(data["error"]){
-                console.log(data["error"]);
-            }else{
-                token = data["token"];
-                console.log(token);
-            }
-        }
-    });
-    return token;
-}
-
 function get_current_date(){
     var today = new Date();
     var date = today.getFullYear()+'_'+(today.getMonth()+1)+'_'+today.getDate();
@@ -287,29 +268,7 @@ function addContact(element){
     contacts.insertBefore(div, contacts.children[length-1]);
 }
 
-window.addEventListener('mouseup',function(event){
-    var optionsBlocks = document.getElementsByClassName("options");
-    var isClickedOnOptions = false;
-
-    var exitMenuBlock = document.getElementById("exitBlock");
-    var exitMenuButton = document.getElementById("exit");
-
-    if(event.target != exitMenuBlock && event.target != exitMenuButton){
-        closeExitMenu(exitMenuBlock);
-    }
-    
-    for(var i = 0; i < optionsBlocks.length; i++){
-        if(event.target == optionsBlocks[i] || event.target == optionsBlocks[i].parentElement.children[3] || event.target == optionsBlocks[i].parentElement.children[3].children[0] || event.target == optionsBlocks[i].parentElement.children[3].children[1]){
-            isClickedOnOptions = true;
-            break;
-        }
-    }    
-    if(isClickedOnOptions == false){
-        for(var i = 0; i < optionsBlocks.length; i++){            
-            optionsBlocks[i].parentElement.children[3].classList.remove("active");
-        }   
-    }
-}); 
+ 
 
 function sortTable(n, id) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
