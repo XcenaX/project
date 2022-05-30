@@ -74,6 +74,12 @@ def session_parameter(request, name):
     except:
         return None
 
+def get_or_none(classmodel, **kwargs):
+    try:
+        return classmodel.objects.get(**kwargs)
+    except Exception:
+        return None
+
 def get_current_user(request):
     if not request.session.get("user", None):
         return None

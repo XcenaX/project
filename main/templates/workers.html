@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% load sass_tags %}
+
+{%block workers%}active{%endblock%}
+
+{%block styles%}
+    <link rel="stylesheet" href="{%sass_src 'css/main/workers.scss'%}">
+{%endblock%}
+
+{%block main%}
+    <div class="content-wrap">        
+        <div class="content-block">
+            <div class="title-block">
+                <div class="title">Сотрудники</div>
+                <a href="{%url 'main:add_worker'%}">
+                    <button class="save" type="submit" style="margin: 0;">Добавить</button>
+                </a>    
+            </div>
+            
+            <div class="workers-block">
+                {%for worker in workers%}
+                    <div class="item">  
+                        <div class="wrapper">
+                            <div class="data-block">
+                                <div class="info-block">
+                                    <div class="photo" style="background-image: url({%if worker.image%}{{worker.image.url}}{%else%}/static/img/profile-user.png{%endif%})"></div>
+                                    <div class="div text-block">
+                                        <div class="title">{{worker.full_name}}</div>
+                                        <div class="tasks">Выполнено задач: {{worker.made_tasks}}</div>
+                                    </div>                            
+                                </div>
+                                <form action="{%url 'main:delete_worker' worker.id%}" method="post" class="delete-form">{%csrf_token%}
+                                    <input class="delete" title="Удалить работника" type="submit"/>
+                                </form>                                
+                            </div>
+                            
+                        </div>                                              
+                    </div>
+                {%endfor%}
+            </div>
+            
+        </div>
+    </div>
+{%endblock%}

@@ -1,0 +1,38 @@
+.add-worker {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: 5vw; }
+  .add-worker multi-input {
+    width: 100%; }
+  .add-worker .half-side {
+    width: 45%; }
+  .add-worker .main-title {
+    font-size: 1.3vw;
+    font-weight: bold;
+    margin-bottom: 2vw;
+    line-height: 1.3vw; }
+  .add-worker .input-block {
+    margin-top: 1vw;
+    margin-bottom: 1vw; }
+    .add-worker .input-block .title {
+      font-size: 1vw;
+      line-height: 1vw;
+      font-weight: bold;
+      margin-bottom: 1vw; }
+    .add-worker .input-block .title.important > span {
+      color: red;
+      font-weight: bold;
+      font-size: 1vw; }
+    .add-worker .input-block input.input {
+      padding: 1vw 2vw;
+      background-color: white;
+      border: 0.1vw solid gray;
+      font-size: 1vw;
+      line-height: 1vw;
+      width: 100%; }
+  .add-worker .input-block.full {
+    width: 100%; }
+
+/*# sourceMappingURL=add-worker.css.map */

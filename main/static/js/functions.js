@@ -112,6 +112,16 @@ function createSchedule(element){
     table.insertBefore(tr, table.children[length-1]);
 }
 
+function startLoading(){
+    loadBlock = $("#load")[0];
+    loadBlock.classList.add("active");
+}
+
+function finishLoading(){
+    loadBlock = $("#load")[0];
+    loadBlock.classList.remove("active");
+}
+
 function removeSchedule(element){
     tr = element.parentElement.parentElement;
     tr.remove();

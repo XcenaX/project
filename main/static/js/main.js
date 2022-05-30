@@ -10,7 +10,17 @@ $( document ).ready(function() {
     // var toastList = toastElList.map(function (toastEl) {
     //     return new bootstrap.Toast(toastEl, option)
     // })
+    $("select").on("change", function(){
+        button = $("#filter-button")[0];    
+        console.log(button);
+        button.click();
+    });
 
+    //multi-select
+    const multiInput = document.querySelector('multi-input'); 
+    const values = document.querySelector('#values');
+
+    //multi-select
     
 
     $("div[id^='myModal']").each(function(){
@@ -54,6 +64,8 @@ $( document ).ready(function() {
 function SwitchClass(id, _class){
     document.getElementById(id).classList.toggle(_class);
 }
+
+
 
 function openModal(id){
     $("div[id^='"+id+"']").modal("show");

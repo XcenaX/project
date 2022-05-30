@@ -16,18 +16,34 @@
         
         <form class="profile-block" id="img_main_image" method="post" action="{%url 'main:update_avatar'%}">{%csrf_token%}
             <div class="left-side">
-                <div class="photo" id="main_image" title="Изменить фотографию" style="background-image: url({%if current_user.image%}{{current_user.image.url}}{%else%}/static/img/user.png{%endif%});">
+                <div class="photo" id="main_image" title="Изменить фотографию" style="background-image: url({%if current_user.image%}{{current_user.image.url}}{%else%}/static/img/profile-user.png{%endif%});">
                     <input type="file" name="image" class="add-photo">
                 </div>
                 <div class="title">Контакты</div>
-                <div class="contact">
-                    <div class="text">Telegram: </div>
-                    <a href="{{current_user.telegram}}" class="value">Ссылка</a>
-                </div>
-                <div class="contact">
-                    <div class="text">VK: </div>
-                    <a href="{{current_user.vk}}" class="value">Ссылка</a>
-                </div>
+                {%if current_user.telegram%}
+                    <div class="contact">
+                        <div class="text">Telegram: </div>
+                        <a href="{{current_user.telegram}}" class="value">Ссылка</a>
+                    </div>
+                {%endif%}
+                {%if current_user.vk%}
+                    <div class="contact">
+                        <div class="text">VK: </div>
+                        <a href="{{current_user.vk}}" class="value">Ссылка</a>
+                    </div>
+                {%endif%}
+                {%if current_user.phone%}
+                    <div class="contact">
+                        <div class="text">Телефон: </div>
+                        <a class="value">{{current_user.phone}}</a>
+                    </div>
+                {%endif%}
+                {%if current_user.email%}
+                    <div class="contact">
+                        <div class="text">Email: </div>
+                        <a href="mailto:{{current_user.email}}" class="value">{{current_user.email}}</a>
+                    </div>
+                {%endif%}
             </div>
             <div class="right-side">
                 <div class="main-title">Общая информация</div>

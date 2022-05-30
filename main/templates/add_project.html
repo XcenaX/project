@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% load sass_tags %}
+
+{%block styles%}
+    <link rel="stylesheet" href="{%sass_src 'css/main/add-project.scss'%}">
+{%endblock%}
+
+{%block main%}
+    <div class="content-wrap">        
+        <div class="content-block">
+            <div class="title-block">
+                <div class="title">Добавить проект</div>                
+            </div>
+            
+            <form action="" method="post" id="add_project" class="add-project">{%csrf_token%}
+                <input type="text" name="name" class="name" placeholder="Имя проекта">
+                <textarea class="description" placeholder="Описание" name="description"></textarea>
+                <div class="date-block">
+                    <div class="date">
+                        <div class="title">Дата начала проекта</div>
+                        <input type="date" class="date" name="start-date">
+                    </div>
+                    <div class="date">
+                        <div class="title">Дата окончания проекта</div>
+                        <input type="date" class="date" name="end-date">
+                    </div>
+                </div>
+                <div class="tasks-block">
+                    <div class="title">Задачи</div>
+                    <div class="tasks" id="tasks">
+                        
+                    </div>
+                    <div class="add-task" id="add-task" title="Добавить задачу" onclick="addTask()"></div>
+                </div>
+                
+                <div style="text-align:right;height: auto;">
+                    <button class="save" type="submit">Сохранить</button>
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>
+{%endblock%}
+
+{%block scripts%}
+    <script src="{%static 'js/multi-input.js'%}"></script>
+    <script>
+        
+        function addTask(){
+            tasksBlock = $("#tasks")[0];
+            task = document.createElement("div");
+            length = $(".task").length;
+            task.innerHTML = `
+                <div class="task">
+                    <div class="delete-task" title="Удалить задачу" onclick="deleteTask(this)"></div>
+                    <div class="header-block">
+                        <input type="text" class="task-name" placeholder="Имя задачи">
+                        <div class="date-block">
+                            <span>Сделать с </span>
+                            <input type="date" class="date">
+                            <span>До </span>
+                            <input type="date" class="date">
+                        </div>                                
+                    </div>
+                    <textarea class="description" placeholder="Описание"></textarea>
+                    
+                    <div class="title">Умения для задачи</div>
+                    <multi-input>
+                        <input list="technologies`+length+`" name="technologies">
+                        <datalist id="technologies`+length+`">    
+                            {%for item in technologies%}
+                                <option value="{{item.name}}"></option>     
+                            {%endfor%}                         
+                        </datalist>
+                    </multi-input>
+                </div>
+            `;
+            tasksBlock.appendChild(task);
+            
+        }
+
+        function deleteTask(element){
+            element.parentElement.remove();
+        }
+
+        form =  $("#add_project")[0];
+        form.addEventListener('submit', (e) => {            
+            e.preventDefault();
+            startLoading();
+            const form = e.target;
+            data = new FormData(form);            
+            tasksBlocks = document.getElementsByClassName("task");
+            //values = input.getValues();            
+            tasks = [];
+            for(var i = 0; i < tasksBlocks.length; i++){
+                task = tasksBlocks[i];
+                taskData = {
+                    "name": task.children[1].children[0].value,
+                    "start-date": task.children[1].children[1].children[1].value,
+                    "end-date": task.children[1].children[1].children[3].value,
+                    "description": task.children[2].value,
+                    "technologies": task.children[4].getValues()
+                };
+                tasks.push(taskData);
+            }
+
+            data.append("tasks",  JSON.stringify(tasks));
+            fetch(form.action, {
+                method: form.method,
+                body: data,
+            }).then((res) => {
+                finishLoading();
+                console.log(res);                
+                alertify.success("Вы успешно добавили проект!", 5);
+            })
+            
+        });
+    </script>
+{%endblock%}

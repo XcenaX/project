@@ -1,0 +1,126 @@
+form.add-project{
+    width: 100%;
+    margin-top: 5vw;
+
+    button.save{
+        margin: 0;
+    }
+
+    input.name{
+        border: none;
+        outline: none;
+        border-bottom: 0.1vw solid black;
+        font-size: 1.5vw;
+        padding: 0.5vw 0vw;
+        margin-bottom: 2vw;
+        background-color: inherit;
+    }
+    textarea.description{
+        resize: none;
+        width: 100%;
+        height: 10vw;
+        padding: 1vw;
+        font-size: 1vw;
+        margin-bottom: 2vw;
+    }
+    >.date-block{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        >.date{
+            width: 40%;
+
+            .title{
+                font-size: 1vw;
+                font-weight: bold;
+                margin-bottom: 1vw;
+            }
+            input.date{
+                width: 100%;
+                padding: 0.5vw;
+                font-size: 1vw;
+            }
+        }
+    }
+    .tasks-block{
+        width: 100%;
+        margin-top: 2vw;
+        .title{
+            font-size: 1.2vw;
+            font-weight: bold;
+            margin-bottom: 2vw;
+        }
+        .tasks{
+            width: 100%;
+
+            .task{
+                border: 0.1vw solid black;
+                padding: 2.5vw;                
+                max-width: 100%;
+                background-color: white;
+                position: relative;
+                margin-bottom: 2vw;
+
+                .header-block{
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 2vw;
+
+                    .task-name{
+                        border: none;
+                        outline: none;
+                        border-bottom: 0.1vw solid black;
+                        padding: 0.5vw 0vw;
+                        font-size: 1vw;
+                        background-color: inherit;
+                    }
+                    .date-block{
+                        *{
+                            margin-left: 0.5vw;
+                            margin-right: 0.5vw;
+                        }
+                        .date{
+                            padding: 0vw 0.5vw;
+                        }
+                    }
+                }
+                multi-input{
+                    border: none;
+                    outline: none;
+                    
+                    >input{
+                        background-color: #F7F7FC;
+                        border: 0.1vw solid lightgrey;
+                    }
+                }
+                .delete-task{
+                    position: absolute;
+                    top: 0.5vw;
+                    right: 0.5vw;
+                    width: 2vw;
+                    padding-bottom: 2vw;
+                    height: 0;
+                    background-position: center;
+                    background-size: 90%;
+                    background-repeat: no-repeat;
+                    background-image: url(../../images/delete.png);
+                    cursor: pointer;
+                }
+            }
+        }
+        .add-task#add-task{
+            width: 3vw;
+            padding-bottom: 3vw;
+            height: 0;
+            background-size: 90%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url(../../images/add.png);              
+            margin-top: 2vw;         
+            cursor: pointer;
+        }
+    }
+}

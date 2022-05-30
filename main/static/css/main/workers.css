@@ -1,0 +1,64 @@
+.workers-block {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 5vw; }
+  .workers-block .item {
+    width: 44.6%;
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+    background-color: white;
+    border: 0.1vw solid black; }
+    .workers-block .item .wrapper {
+      max-width: 100%;
+      height: 100%;
+      padding: 1vw; }
+      .workers-block .item .wrapper .data-block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap; }
+        .workers-block .item .wrapper .data-block .info-block {
+          width: 70%;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center; }
+          .workers-block .item .wrapper .data-block .info-block .photo {
+            width: 25%;
+            padding-bottom: 25%;
+            height: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 50%;
+            border: 0.1vw solid black; }
+          .workers-block .item .wrapper .data-block .info-block .text-block {
+            width: 55%;
+            margin-left: 5%; }
+            .workers-block .item .wrapper .data-block .info-block .text-block .title {
+              font-size: 1vw;
+              font-weight: bold;
+              line-height: 1vw;
+              margin-bottom: 1vw; }
+            .workers-block .item .wrapper .data-block .info-block .text-block .tasks {
+              font-size: 0.8vw;
+              line-height: 1vw; }
+        .workers-block .item .wrapper .data-block .delete-form {
+          width: 7%;
+          position: relative;
+          margin: 0; }
+          .workers-block .item .wrapper .data-block .delete-form .delete {
+            width: 100%;
+            padding-bottom: 100%;
+            cursor: pointer;
+            background-image: url(../../img/delete.svg);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            outline: none;
+            background-color: inherit;
+            font-size: 0; }
+
+/*# sourceMappingURL=workers.css.map */

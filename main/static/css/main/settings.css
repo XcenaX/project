@@ -96,20 +96,3 @@
     font-weight: bold;
 }
 
-.button-align{
-    width: 100%;
-    text-align: right;
-}
-
-button.save{
-    background-color: #823eea;
-    color: white;
-    border-radius: 2vw;
-    border: 0.2vw solid gray;
-    padding: 1vw 2vw;
-    text-align: center;
-    font-size: 1.2vw;
-    line-height: 1.2vw;
-    outline: none;
-    margin-top: 1vw;
-}

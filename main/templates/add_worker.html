@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% load sass_tags %}
+
+{%block add_task%}active{%endblock%}
+
+{%block styles%}
+    <link rel="stylesheet" href="{%sass_src 'css/main/add-worker.scss'%}">
+{%endblock%}
+
+{%block main%}
+    <div class="content-wrap">        
+        <div class="content-block">
+            <div class="title-block">
+                <div class="title">Добавить работника</div>                
+            </div>
+            
+            <form action="" method="post" id="add_worker" class="add-worker">{%csrf_token%}
+                <div class="half-side">
+                    <div class="main-title">Основная информация</div>
+                    <div class="input-block">
+                        <div class="title important">
+                            ФИО
+                            <span>*</span>
+                        </div>
+                        <input required type="text" class="input" name="name" placeholder="ФИО работника">
+                    </div>
+                    <div class="input-block">
+                        <div class="title important">
+                            Логин
+                            <span>*</span>
+                        </div>
+                        <input required type="text" class="input" name="login" placeholder="Имя пользователя работника">
+                    </div><div class="input-block">
+                        <div class="title important">
+                            Пароль
+                            <span>*</span>
+                        </div>
+                        <input required type="text" class="input" name="password" placeholder="Пароль работника">
+                    </div>
+                    <div class="input-block">
+                        <div class="title important">
+                            Опыт работы
+                            <span>*</span>
+                        </div>
+                        <input required type="text" class="input" name="work_exp" placeholder="Опыт работы работника">
+                    </div>
+                </div>
+                <div class="half-side">
+                    <div class="main-title">Контакты</div>
+                    <div class="input-block">
+                        <div class="title">Телеграм</div>
+                        <input type="text" class="input" name="telegram" placeholder="Телеграм работника">
+                    </div>
+                    <div class="input-block">
+                        <div class="title">ВК</div>
+                        <input type="text" class="input" name="vk" placeholder="ВК работника">
+                    </div>
+                    <div class="input-block">
+                        <div class="title">Телефон</div>
+                        <input type="text" class="input" name="phone" placeholder="Номер телефона работника">
+                    </div>
+                </div>
+                <div class="input-block full">
+                    <div class="title">Выберите умения</div>
+                    <multi-input>
+                        <input list="technologies" name="technologies">
+                        <datalist id="technologies">
+                            {%for item in technologies%}
+                                <option value="{{item.name}}"></option>     
+                            {%endfor%}                         
+                        </datalist>
+                    </multi-input>
+                </div>
+                <div style="opacity: 0;">/</div>
+                <button class="save" type="submit">Добавить</button>
+            </form>
+            
+        </div>
+    </div>
+{%endblock%}
+
+{%block scripts%}
+    <script src="{%static 'js/multi-input.js'%}"></script>
+    <script>
+        
+        form =  $("#add_worker")[0];
+        form.addEventListener('submit', (e) => {            
+            e.preventDefault();
+            startLoading();
+            const form = e.target;
+            data = new FormData(form);            
+            input = document.getElementsByTagName("multi-input")[0];
+            values = input.getValues();            
+            data.append("technologies", values);
+            fetch(form.action, {
+                method: form.method,
+                body: data,
+            }).then((res) => {
+                finishLoading();
+                console.log(res);                
+                alertify.success("Вы успешно добавили сотрудника!", 5);
+            })
+            
+        });
+    </script>
+{%endblock%}

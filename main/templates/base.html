@@ -22,11 +22,12 @@
 
         <script src="{%static 'js/alertify.js'%}"></script>
         <script src="{%static 'js/functions.js'%}"></script>
+        <script src="{%static 'js/main.js'%}"></script>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
         		
-        <link rel="stylesheet" href="{%static 'bootstrap/css/bootstrap.min.css'%}" />                
+        <!-- <link rel="stylesheet" href="{%static 'bootstrap/css/bootstrap.min.css'%}" />                 -->
         
         {% block styles %}
 
@@ -37,7 +38,7 @@
 
 <body>
 {% block body%}
-       
+        <div class="load-block" id="load"></div>
         <div class="show-on-mobile">
             <h1 class="mobile-alert">Мобильная версия пока не доступна!</h1>
         </div>
@@ -68,11 +69,11 @@
                             <div class="up-text">{{current_user.full_name}}</div>
                             <div class="down-text">
                                 {%if current_user.role.name == 'user'%}
-                                    Сотрудник
-                                {%elif current_user.role.name == 'director'%}
-                                    Директор
+                                    Сотрудник                                
                                 {%elif current_user.role.name == 'admin'%}
-                                    Админ
+                                    Админ                                
+                                {%elif current_user.role.name == 'manager'%}
+                                    Менеджер
                                 {%endif%}
                             </div>
                         </div>
@@ -83,12 +84,18 @@
                 
                 <div class="menu">
                     <div class="item">Главная</div>
-                    <a href="{% url 'main:index'%}" class="sub-item {%block training%}{%endblock%}">Мои задачи</a>
-                    <a href="{% url 'main:reservations'%}" class="sub-item {%block reservations%}{%endblock%}">Мои проекты</a>
+                    {%if current_user.role.name == 'user'%}
+                        <a href="{% url 'main:index'%}" class="sub-item {%block training%}{%endblock%}">Мои задачи</a>
+                        <a href="{% url 'main:projects'%}" class="sub-item {%block projects%}{%endblock%}">Мои проекты</a>
+                    {%elif current_user.role.name == 'manager'%}
+                        <a href="{% url 'main:manager_tasks'%}" class="sub-item {%block tasks%}{%endblock%}">Задачи</a>
+                        <a href="{% url 'main:workers'%}" class="sub-item {%block workers%}{%endblock%}">Сотрудники</a>
+                        <a href="{% url 'main:projects'%}" class="sub-item {%block manager_projects%}{%endblock%}">Проекты</a>                        
+                    {%endif%}
                     
 
                     <a href="{% url 'main:settings'%}" class="item {%block settings%}{%endblock%}">Профиль</a>
-                    <a href="{% url 'main:history'%}" class="item {%block history%}{%endblock%}">История</a>
+                    <!-- <a href="{% url 'main:history'%}" class="item {%block history%}{%endblock%}">История</a> -->
                     <a class="item" id="exit_button">Выход</a>
                 </div>
                 <div class="bottom">
