@@ -21,10 +21,21 @@
                         <div class="title">Дата начала проекта</div>
                         <input type="date" class="date" name="start-date">
                     </div>
-                    <div class="date">
+                    <!-- <div class="date">
                         <div class="title">Дата окончания проекта</div>
                         <input type="date" class="date" name="end-date">
-                    </div>
+                    </div> -->
+                </div>
+                <div class="workers-block">
+                    <div class="title">Сотрудники</div>
+                    <multi-input>
+                        <input list="workers" name="workers">
+                        <datalist id="workers">    
+                            {%for item in workers%}
+                                <option value="{{item.full_name}}" name="{{item.id}}"></option>     
+                            {%endfor%}                         
+                        </datalist>
+                    </multi-input>
                 </div>
                 <div class="tasks-block">
                     <div class="title">Задачи</div>
@@ -39,7 +50,7 @@
                 </div>
                 
             </form>
-            
+          
         </div>
     </div>
 {%endblock%}
@@ -47,51 +58,148 @@
 {%block scripts%}
     <script src="{%static 'js/multi-input.js'%}"></script>
     <script>
-        
+        var tasks = [];
+        var multiSelectCounter = 0;
         function addTask(){
             tasksBlock = $("#tasks")[0];
             task = document.createElement("div");
-            length = $(".task").length;
+            
+            // <div class="date-block">
+            //     <span>Сделать с </span>
+            //     <input type="date" class="date">
+            //     <span>До </span>
+            //     <input type="date" class="date">
+            // </div> Это блок с датами, может пригодится               
+            tasksString = ``;
+            for(var i = 0; i < tasks.length; i++){
+                tasksString += `
+                    <option value="`+tasks[i]["name"]+`"></option>     
+                `;
+            }
+            hideElement = "hide";
+            if(tasks.length > 0) hideElement = "";
+            task.classList.add("task");
             task.innerHTML = `
-                <div class="task">
+                                   
                     <div class="delete-task" title="Удалить задачу" onclick="deleteTask(this)"></div>
+                    <div class="save-task" title="Сохранить задачу" onclick="saveTask(this)"></div>
                     <div class="header-block">
                         <input type="text" class="task-name" placeholder="Имя задачи">
-                        <div class="date-block">
-                            <span>Сделать с </span>
-                            <input type="date" class="date">
-                            <span>До </span>
-                            <input type="date" class="date">
-                        </div>                                
+                                         
                     </div>
                     <textarea class="description" placeholder="Описание"></textarea>
                     
                     <div class="title">Умения для задачи</div>
                     <multi-input>
-                        <input list="technologies`+length+`" name="technologies">
-                        <datalist id="technologies`+length+`">    
+                        <input list="technologies`+multiSelectCounter+`" name="technologies">
+                        <datalist id="technologies`+multiSelectCounter+`">    
                             {%for item in technologies%}
                                 <option value="{{item.name}}"></option>     
                             {%endfor%}                         
                         </datalist>
                     </multi-input>
-                </div>
+
+                    <div class="title half `+hideElement+`">Эту задачу можно начать делать после выполнения слеудющих задач:</div>
+                    <multi-input class="`+hideElement+`">
+                        <input list="tasks`+multiSelectCounter+`" name="tasks">
+                        <datalist id="tasks`+multiSelectCounter+`">    
+                            `+tasksString+`
+                        </datalist>
+                    </multi-input>
+                    <div class="blur"></div>  
+                
             `;
             tasksBlock.appendChild(task);
-            
+            multiSelectCounter++;
         }
 
         function deleteTask(element){
-            element.parentElement.remove();
+            taskBlock = element.parentElement;
+            if(tasks.length == 1){
+                taskBlock.remove();
+                return;    
+            }
+            taskName = taskBlock.querySelector(".header-block input").value;
+            for(var i = 0; i < tasks.length; i++){
+                if(tasks[i]["name"] === taskName){
+                    tasks.splice(i, 1);
+                    break;
+                }
+            }
+            taskBlock.remove();
+            allTasks = $(".task");
+            for(var i; i < allTasks.length; i++){
+                multiInputs = allTasks[i].getElementsByTagName("multi-input");
+                if(multiInputs.length < 2){
+                    continue;
+                }
+                multiInput = multiInputs[1];
+                items = multiInput.getElementsByClassName("item");
+                for(var j = 0; j < items.length; j++){
+                    if(items[j].textContent === taskName){
+                        items[j].click();
+                        break;
+                    }
+                }
+            }
+            alertify.error("Задача удалена!");
+        }
+
+        function saveTask(element){
+            taskBlock = element.parentElement;
+            
+            if(taskBlock.children[2].children[0].value.trim().length == 0){
+                alertify.error("Имя задачи не может быть пустым!", 5);
+                return;
+            }
+            else if(taskBlock.children[5].getValues().length == 0){
+                alertify.error("Добавьте умения необходимые для выполнения задачи!", 5);
+                return;
+            }
+            task = {
+                "name": taskBlock.querySelector(".header-block input").value,
+                "description": taskBlock.querySelector("textarea.description").value,                
+                "technologies": taskBlock.children[5].getValues()
+            };
+            tasks.push(task);
+            element.remove();
+            taskBlock.querySelector(".header-block input").disabled = true;
+            taskBlock.querySelector("textarea.description").disabled = true;
+            taskBlock.children[4].children[0].disabled = true;
+            if(tasks.length > 1){
+                taskBlock.children[6].children[0].disabled = true;
+            }
+            taskBlock.classList.add("saved");
+            alertify.success("Задача сохранена!", 3);
         }
 
         form =  $("#add_project")[0];
         form.addEventListener('submit', (e) => {            
-            e.preventDefault();
-            startLoading();
+            e.preventDefault();            
+            startLoading();            
             const form = e.target;
+            if(form.querySelector("input.name").value.trim().length == 0){
+                finishLoading();
+                alertify.error("Укажите имя проекта!", 5);                
+                return;
+            }
+            if(form.querySelector("input.date").value.trim().length == 0){
+                finishLoading();
+                alertify.error("Укажите дату начала проекта!", 5);                
+                return;
+            }
+            if(form.querySelector(".workers-block multi-input").getValues().length == 0){
+                finishLoading();
+                alertify.error("Добавьте хотя бы одного сотрудника в проект!", 5);                
+                return;
+            }
+            if(tasks.length == 0){
+                finishLoading();
+                alertify.error("Добавьте хотя бы одну задачу в проект!", 5);                
+                return;
+            }
             data = new FormData(form);            
-            tasksBlocks = document.getElementsByClassName("task");
+            tasksBlocks = document.getElementsByClassName("task.saved");            
             //values = input.getValues();            
             tasks = [];
             for(var i = 0; i < tasksBlocks.length; i++){
@@ -106,7 +214,11 @@
                 tasks.push(taskData);
             }
 
+            workers = document.querySelector(".workers-block multi-input").getValues();
+
+
             data.append("tasks",  JSON.stringify(tasks));
+            data.append("workers", JSON.stringify(workers));
             fetch(form.action, {
                 method: form.method,
                 body: data,

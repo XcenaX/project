@@ -144,10 +144,12 @@ class AddProjectView(View):
             return redirect(reverse("main:login"))
         if current_user.role.name not in self.roles:
              return redirect(reverse("main:index"))
-        technologies = Technology.objects.all()        
+        technologies = Technology.objects.all()  
+        worker_role = get_or_none(Role, name="user")      
         return render(request, self.template_name, {            
             "technologies": technologies,
             "current_user": current_user,
+            "workers": User.objects.filter(role=worker_role) 
         })
     def post(self, request, *args, **kwargs):
         name = post_parameter(request, "name")

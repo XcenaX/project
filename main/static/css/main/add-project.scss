@@ -21,7 +21,7 @@ form.add-project{
         height: 10vw;
         padding: 1vw;
         font-size: 1vw;
-        margin-bottom: 2vw;
+        margin-bottom: 2vw;        
     }
     >.date-block{
         display: flex;
@@ -43,13 +43,35 @@ form.add-project{
             }
         }
     }
+    multi-input{
+        border: none;
+        outline: none;
+        
+        >input{
+            background-color: #F7F7FC;
+            border: 0.1vw solid lightgrey;
+        }
+    }
+    .workers-block{
+        width: 100%; 
+        margin-top: 2vw;
+        .title{
+            font-size: 1vw;
+            font-weight: bold;
+            margin-bottom: 1vw;
+        }
+    }
     .tasks-block{
         width: 100%;
         margin-top: 2vw;
         .title{
             font-size: 1.2vw;
             font-weight: bold;
-            margin-bottom: 2vw;
+            margin-top: 2vw;
+            margin-bottom: 1vw;
+        }
+        .title.half{
+            width: 50%;
         }
         .tasks{
             width: 100%;
@@ -61,6 +83,10 @@ form.add-project{
                 background-color: white;
                 position: relative;
                 margin-bottom: 2vw;
+
+                .blur{
+                    display: none;
+                }
 
                 .header-block{
                     width: 100%;
@@ -87,15 +113,7 @@ form.add-project{
                         }
                     }
                 }
-                multi-input{
-                    border: none;
-                    outline: none;
-                    
-                    >input{
-                        background-color: #F7F7FC;
-                        border: 0.1vw solid lightgrey;
-                    }
-                }
+                
                 .delete-task{
                     position: absolute;
                     top: 0.5vw;
@@ -108,7 +126,34 @@ form.add-project{
                     background-repeat: no-repeat;
                     background-image: url(../../images/delete.png);
                     cursor: pointer;
+                    z-index: 5;
                 }
+                .save-task{
+                    position: absolute;
+                    top: 0.5vw;
+                    right: 3.5vw;
+                    width: 2vw;
+                    padding-bottom: 2vw;
+                    height: 0;
+                    background-position: center;
+                    background-size: 90%;
+                    background-repeat: no-repeat;
+                    background-image: url(../../images/save.png);
+                    cursor: pointer;
+                }
+            }
+        }
+        .task.saved{
+            .blur{
+                display: block;            
+                position: absolute;
+                z-index: 4;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;                
+                background: rgba(0,0,0,1);
+                opacity: 0.1;
             }
         }
         .add-task#add-task{
