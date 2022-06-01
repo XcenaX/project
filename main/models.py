@@ -46,7 +46,7 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
     @property
     def made_tasks(self):
-        return len(Task.objects.filter(user=self, finished=True))
+        return len(Task.objects.filter(user=self, status="3"))
     def __str__(self):
         return self.full_name
 
@@ -55,14 +55,12 @@ class Task(models.Model):
     name = models.TextField()
     description = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    start_date = models.DateField(default=datetime.date.today)
-    end_date = models.DateField(blank=True, default=True)
-    technologies = models.ManyToManyField(Technology)
-    finished = models.BooleanField(default=False)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    technologies = models.ManyToManyField(Technology)    
     status = models.CharField(max_length=1, choices=TASK_STATUS, default="0")
 
-    def get_status_name(self):
-        print(self.status)
+    def get_status_name(self):        
         return dict(TASK_STATUS)[self.status]        
 
     def __str__(self):
@@ -72,7 +70,8 @@ class Project(models.Model):
     name = models.TextField(default='')
     description = models.TextField(default='')
     start_date = models.DateField(default=datetime.date.today)
-    end_date = models.DateField(blank=True, default=True) 
+    end_date = models.DateField(blank=True, null=True) 
     tasks = models.ManyToManyField(Task, null=True, blank=True)
+    workers = models.ManyToManyField(User, null=True, blank=True)
     def __str__(self):
         return self.name

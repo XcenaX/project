@@ -50,7 +50,7 @@
                 </div>
                 
             </form>
-          
+            
         </div>
     </div>
 {%endblock%}
@@ -199,25 +199,23 @@
                 return;
             }
             data = new FormData(form);            
-            tasksBlocks = document.getElementsByClassName("task.saved");            
+            tasksBlocks = document.getElementsByClassName("task saved");            
             //values = input.getValues();            
-            tasks = [];
+            currentTasks = [];
             for(var i = 0; i < tasksBlocks.length; i++){
                 task = tasksBlocks[i];
                 taskData = {
-                    "name": task.children[1].children[0].value,
-                    "start-date": task.children[1].children[1].children[1].value,
-                    "end-date": task.children[1].children[1].children[3].value,
+                    "name": task.children[1].children[0].value,                    
                     "description": task.children[2].value,
                     "technologies": task.children[4].getValues()
                 };
-                tasks.push(taskData);
+                currentTasks.push(taskData);
             }
 
             workers = document.querySelector(".workers-block multi-input").getValues();
 
 
-            data.append("tasks",  JSON.stringify(tasks));
+            data.append("tasks",  JSON.stringify(currentTasks));
             data.append("workers", JSON.stringify(workers));
             fetch(form.action, {
                 method: form.method,

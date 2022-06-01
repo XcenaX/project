@@ -157,14 +157,26 @@ class AddProjectView(View):
         start_date = post_parameter(request, "start-date")
         end_date = post_parameter(request, "end-date")
         tasks = post_parameter(request, "tasks")
+        workers = post_parameter(request, "workers")
+        worker_role = get_or_none(Role, name="user")        
         
         tasks = json.loads(tasks)        
-        model_tasks = []
+        workers = json.loads(workers)  
+
+        print(tasks)        
         
+        model_tasks = []        
+        model_workers = []
+
+        for worker in workers:
+            data = get_or_none(User, role=worker_role, full_name=worker)
+            if data:
+                model_workers.append(data)
+
         for task in tasks:            
             technologies = task["technologies"]
             model_technologies = Technology.objects.filter(name__in=technologies)
-            model_task = Task.objects.create(name=task["name"], description=task["description"], start_date=task["start-date"], end_date=task["end-date"])
+            model_task = Task.objects.create(name=task["name"], description=task["description"])
             for item in model_technologies:
                 model_task.technologies.add(item)
             model_task.save()
@@ -172,8 +184,17 @@ class AddProjectView(View):
         project = Project.objects.create(name=name, description=description, start_date=start_date, end_date=end_date)
         for item in model_tasks:
             project.tasks.add(item)
+        for item in model_workers:
+            project.workers.add(item)
         project.save()
         return JsonResponse({"message": "Вы успешно добавили проект!"}, status=200)
+
+class OptimalDistributionView(View):
+    def get(self, request):
+        return JsonResponse({"error": "GET method not allowed!"})
+    def post(self, request):
+        return JsonResponse({})
+        #Доделать
 
 class HistoryView(View):
     template_name = "history.html"
