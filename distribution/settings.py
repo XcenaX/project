@@ -85,22 +85,22 @@ WSGI_APPLICATION = 'distribution.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'distribution$default',
-        'USER': 'distribution',
-        'PASSWORD': 'Dagad582#',
-        'HOST': 'distribution.mysql.pythonanywhere-services.com',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'distribution$default',
+#         'USER': 'distribution',
+#         'PASSWORD': 'Dagad582#',
+#         'HOST': 'distribution.mysql.pythonanywhere-services.com',
+#     }
+# }
 
 
 # Password validation
