@@ -41,7 +41,7 @@ class User(AbstractUser):
     image = models.FileField(storage=ClientDocsStorage(), blank=True, null=True)
     technologies = models.ManyToManyField(Technology, blank=True)
     def save(self, *args, **kwargs):
-        if not self.pk and self.username != "XcenaX":
+        if not self.pk and not self.is_staff:
             self.password = make_pw_hash(self.password)
         super(User, self).save(*args, **kwargs)
     @property
