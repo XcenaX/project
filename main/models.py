@@ -36,7 +36,7 @@ class User(AbstractUser):
     vk = models.TextField(default='', blank=True)
     phone = models.TextField(default='', blank=True)
     email = models.TextField(default='', blank=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, blank=True, null=True)    
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, blank=True, null=True, default=Role.objects.filter(name="user").first().pk)    
     password = models.TextField(blank=True, null=True)
     image = models.FileField(storage=ClientDocsStorage(), blank=True, null=True)
     technologies = models.ManyToManyField(Technology, blank=True)
