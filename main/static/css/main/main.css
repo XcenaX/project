@@ -103,6 +103,19 @@ body{
     height: 3.5vw;
 }
 
+.task-block .delete-task{
+    position: absolute;
+    top: 3vw;
+    right: 3vw;
+    width: 2vw;
+    padding-bottom: 2vw;
+    background-image: url(../../images/delete.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 5;
+}
+
 .task-block .head-block .left-side{
     width: 70%;
     display: flex;

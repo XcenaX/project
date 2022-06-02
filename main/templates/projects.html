@@ -26,6 +26,7 @@
         {%if projects|length > 0%}
                 {%for project in projects%}
                     <div class="task-block">
+                        <div class="delete-task" title="Удалить задачу" onclick="deleteProject(this)"></div>
                         <div class="head-block" style="height: auto;">
                             <div class="left-side">
                                 <div class="title">{{project.name}}</div>                                

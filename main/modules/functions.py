@@ -80,11 +80,11 @@ def get_or_none(classmodel, **kwargs):
     except Exception:
         return None
 
-def get_current_user(request):
-    if not request.session.get("user", None):
+def get_current_user(request):    
+    try:
+        return get_or_none(User, id=request.session["user"])
+    except:
         return None
-    user = User.objects.filter(id=request.session["user"]).first()
-    return user
 
 class make_incrementor(object):
     count = 0

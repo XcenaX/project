@@ -1,10 +1,9 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import View
-from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
+from django.http import JsonResponse
 from django.dispatch import receiver
 from django.db.models.signals import *
-from grpc import Status
 
 from main.modules.hashutils import check_pw_hash, make_pw_hash
 
@@ -55,8 +54,8 @@ class RegisterView(View):
 class LogoutView(View):    
     def get(self, request, *args, **kwargs):                            
         return JsonResponse({"error": "GET method not allowed!"})
-    def post(self, request, *args, **kwargs):
-        del request.session["user"]
+    def post(self, request, *args, **kwargs):        
+        del request.session["user"]        
         return redirect(reverse("main:login"))
 
 

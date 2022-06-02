@@ -97,6 +97,7 @@
                     <a href="{% url 'main:settings'%}" class="item {%block settings%}{%endblock%}">Профиль</a>
                     <!-- <a href="{% url 'main:history'%}" class="item {%block history%}{%endblock%}">История</a> -->
                     <a class="item" id="exit_button">Выход</a>
+                    <form action="{%url 'main:logout'%}" method="post" class="hide" id="logout-form">{%csrf_token%}</form>
                 </div>
                 <div class="bottom">
                     <div class="phone-block">
@@ -115,8 +116,7 @@
 </body>
 <script>
     $("#exit_button").on("click", function(e) {            
-        delete_cookie("user");
-        document.location = "/login";
+        $("#logout-form")[0].submit();
     });
 </script>
 {%block scripts%}
