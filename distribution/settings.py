@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'distribution.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'distribution$main',
+        'NAME': 'distribution$default',
         'USER': 'distribution',
         'PASSWORD': 'Dagad582#',
         'HOST': 'distribution.mysql.pythonanywhere-services.com',
