@@ -16,8 +16,7 @@ form.add-project {
     width: 100%;
     height: 10vw;
     padding: 1vw;
-    font-size: 1vw;
-    margin-bottom: 2vw; }
+    font-size: 1vw; }
   form.add-project > .date-block {
     display: flex;
     justify-content: space-between;
@@ -55,6 +54,16 @@ form.add-project {
       margin-bottom: 1vw; }
     form.add-project .tasks-block .title.half {
       width: 50%; }
+    form.add-project .tasks-block .title.flex-center {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center; }
+      form.add-project .tasks-block .title.flex-center input {
+        width: 1.5vw;
+        height: 1.5vw;
+        margin-left: 0.5vw; }
+      form.add-project .tasks-block .title.flex-center span {
+        line-height: 1.5vw; }
     form.add-project .tasks-block .tasks {
       width: 100%; }
       form.add-project .tasks-block .tasks .task {
@@ -129,5 +138,82 @@ form.add-project {
       background-image: url(../../images/add.png);
       margin-top: 2vw;
       cursor: pointer; }
+  form.add-project .table-block {
+    margin-top: 2vw;
+    margin-bottom: 2vw; }
+    form.add-project .table-block .title {
+      font-size: 1vw;
+      font-weight: bold;
+      margin-bottom: 1vw; }
+    form.add-project .table-block .text {
+      font-size: 0.8vw;
+      width: 50%;
+      text-align: justify;
+      margin-bottom: 1vw; }
+    form.add-project .table-block table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border: 0.1vw solid black; }
+    form.add-project .table-block th,
+    form.add-project .table-block td {
+      padding: 0;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: 0.1vw solid black; }
+      form.add-project .table-block th input,
+      form.add-project .table-block td input {
+        border: none;
+        outline: none;
+        padding: 1vw;
+        width: 75%;
+        font-size: 1vw;
+        background-color: inherit;
+        margin: auto;
+        text-align: center; }
+    form.add-project .table-block th {
+      text-align: left; }
+    form.add-project .table-block th.diagonal-th {
+      display: flex;
+      justify-content: space-between;
+      min-width: 12vw;
+      position: relative; }
+      form.add-project .table-block th.diagonal-th span.up {
+        margin-bottom: 1vw; }
+      form.add-project .table-block th.diagonal-th span.down {
+        margin-top: 1vw; }
+    form.add-project .table-block th.diagonal-th .line {
+      position: absolute;
+      height: 0;
+      padding: 0;
+      border-top: 0.1vw solid black;
+      width: 104%;
+      transform: rotate(13deg);
+      left: -2%;
+      top: 50%; }
+    form.add-project .table-block td.inactive {
+      background-color: gray; }
+      form.add-project .table-block td.inactive input {
+        display: none; }
+    form.add-project .table-block thead th {
+      background-color: #55608f;
+      text-align: center;
+      padding: 1vw; }
+    form.add-project .table-block tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.3); }
+    form.add-project .table-block tbody td {
+      position: relative;
+      text-align: center;
+      color: black; }
+      form.add-project .table-block tbody td:hover:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -9999px;
+        bottom: -9999px;
+        background-color: rgba(255, 255, 255, 0.2);
+        z-index: -1; }
 
 /*# sourceMappingURL=add-project.css.map */

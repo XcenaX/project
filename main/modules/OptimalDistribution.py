@@ -78,11 +78,12 @@ import numpy as np
 #     [6, 7, 5, 5, 1]
 # ])
 # sequencing = np.array([
-#     [0, 0, 1, 0, 0],
-#     [0, 0, 1, 0, 0],
-#     [0, 0, 0, 1, 0],
-#     [0, 0, 0, 0, 1],
-#     [0, 0, 0, 0, 0]
+#       1  2  3  4  5
+#     1[0, 0, 1, 0, 0],
+#     2[0, 0, 1, 0, 0],
+#     3[0, 0, 0, 1, 0],
+#     4[0, 0, 0, 0, 1],
+#     5[0, 0, 0, 0, 0]
 # ])
 # parallel_by_one = []
 
@@ -289,12 +290,12 @@ class OptimalDistribution():
                     return False
 
 # print(self.hungarian(matrix))
-distr = OptimalDistribution(matrix, sequencing, parallel_by_one)
-try:
-    result = distr.solve()
-    print(result)
-except AssertionError:
-    print("Error!")
+# distr = OptimalDistribution(matrix, sequencing, parallel_by_one)
+# try:
+#     result = distr.solve()
+#     print(result)
+# except AssertionError:
+#     print("Error!")
 
 # for i in range(len(sequencing)):
 #     print(i + 1, 'and 6 are', 'sequential' if is_sequential(sequencing, i, 5) else 'parallel')

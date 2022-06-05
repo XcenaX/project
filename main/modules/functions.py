@@ -86,6 +86,13 @@ def get_current_user(request):
     except:
         return None
 
+def can_solve(task_techs, worker_techs):
+    print(task_techs, worker_techs)
+    for task_tech in task_techs:
+        if task_tech not in worker_techs:
+            return False
+    return True
+
 class make_incrementor(object):
     count = 0
 

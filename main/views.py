@@ -8,8 +8,12 @@ from django.db.models.signals import *
 from main.modules.hashutils import check_pw_hash, make_pw_hash
 
 from .modules.functions import *
+from .modules.OptimalDistribution  import OptimalDistribution
+
+import datetime
 
 from main.models import *
+import numpy as np
 
 class LoginView(View):
     template_name = "login.html"
@@ -148,7 +152,7 @@ class AddProjectView(View):
         return render(request, self.template_name, {            
             "technologies": technologies,
             "current_user": current_user,
-            "workers": User.objects.filter(role=worker_role) 
+            "workers": User.objects.filter(role=worker_role, is_staff=False) 
         })
     def post(self, request, *args, **kwargs):
         name = post_parameter(request, "name")
@@ -162,7 +166,22 @@ class AddProjectView(View):
         tasks = json.loads(tasks)        
         workers = json.loads(workers)  
 
-        print(tasks)        
+        matrix = post_parameter(request, "matrix")
+        matrix = json.loads(matrix)
+        matrix = np.array(matrix)
+
+        sequencing = post_parameter(request, "sequencing")
+        sequencing = json.loads(sequencing)
+        sequencing = np.array(sequencing)
+
+        parrallel_by_one = post_parameter(request, "parrallel_by_one")
+        parrallel_by_one = json.loads(parrallel_by_one)
+        optimal = OptimalDistribution(matrix, sequencing, parrallel_by_one)
+        try:
+            answer = optimal.solve()
+        except Exception as e:
+            return JsonResponse({"error": e}, status=500)
+        print(answer, answer[2]) 
         
         model_tasks = []        
         model_workers = []
@@ -180,7 +199,13 @@ class AddProjectView(View):
                 model_task.technologies.add(item)
             model_task.save()
             model_tasks.append(model_task)
-        project = Project.objects.create(name=name, description=description, start_date=start_date, end_date=end_date)
+
+        for worker, task in answer[0]:
+            model_tasks[task].user = model_workers[worker]
+            model_tasks[task].save()
+
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+        project = Project.objects.create(name=name, description=description, start_date=start_date, end_date=start_date+datetime.timedelta(days=int(answer[2])))
         for item in model_tasks:
             project.tasks.add(item)
         for item in model_workers:
@@ -188,12 +213,31 @@ class AddProjectView(View):
         project.save()
         return JsonResponse({"message": "Вы успешно добавили проект!"}, status=200)
 
-class OptimalDistributionView(View):
+
+class TableDataView(View):
     def get(self, request):
-        return JsonResponse({"error": "GET method not allowed!"})
-    def post(self, request):
-        return JsonResponse({})
-        #Доделать
+        return JsonResponse({"error": "GET method not allowed!"})    
+    def post(self, request):        
+        tasks = post_parameter(request, "tasks")
+        workers = post_parameter(request, "workers")        
+        tasks = json.loads(tasks)
+        workers = json.loads(workers)
+        worker_role = get_or_none(Role, name="user")
+
+        data = []
+        count = 0
+        for task in tasks:
+            data.append([])
+            for worker in workers:
+                model_worker = get_or_none(User, role=worker_role, full_name=worker)
+                current_techs = []
+                for i in model_worker.technologies.all():
+                    current_techs.append(i.name)
+                solve = can_solve(task["technologies"], current_techs)                
+                data[count].append(solve)                  
+            count+=1        
+        return JsonResponse({"data": data}, status=200)
+        
 
 class HistoryView(View):
     template_name = "history.html"
@@ -341,7 +385,7 @@ class WorkersView(View):
         if not current_user:
             return redirect(reverse("main:login"))
         worker_role = Role.objects.get(name="user")
-        workers = User.objects.filter(role=worker_role)
+        workers = User.objects.filter(role=worker_role, is_staff=False)
         return render(request, self.template_name, {
             "workers": workers,
             "current_user": current_user,
@@ -364,6 +408,25 @@ class DeleteWorkersView(View):
         
         worker.delete()
         return redirect(reverse("main:workers"))
+
+
+class DeleteProjectView(View):    
+    roles = ["manager"]
+    def get(self, request, id):
+        return JsonResponse({"error": "POST method not allowed!"})
+    def post(self, request, id):
+        project = get_or_none(Project, id=id)
+        
+        if not project:
+            return redirect(reverse("main:projects"))
+        current_user = get_current_user(request)
+        if current_user.role.name not in self.roles:
+            return redirect(reverse("main:projects"))
+        
+        for task in project.tasks.all():
+            task.delete()
+        project.delete()
+        return redirect(reverse("main:projects"))
         
 
 class UpdateAvatar(View):

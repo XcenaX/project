@@ -44,13 +44,37 @@
                     </div>
                     <div class="add-task" id="add-task" title="Добавить задачу" onclick="addTask()"></div>
                 </div>
-                
-                <div style="text-align:right;height: auto;">
-                    <button class="save" type="submit">Сохранить</button>
+
+                <div class="table-block hide" id="table-block">
+                    <div class="title">Заполните таблицу</div>
+                    <div class="text">В таблице укажите за сколько дней каждый работник может сделать каждую задачу. Если клетка серая, то это означает что сотрудник не может сделать эту задачу основываясь на его навыках
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="diagonal-th crossed">
+                                    <span class="down">Задачи</span>
+                                    <span class="up">Сотрудники</span>                                    
+                                </th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                        
+                    </table>
                 </div>
                 
+                <div style="text-align:-webkit-right;height: auto;">
+                    <div class="save" id="next-step" onclick="showTable(this);">Далее</div>
+                </div>
+
+                <div style="text-align:right;height: auto;" class="hide" id="submit-button">
+                    <button class="save" type="submit">Сохранить</button>
+                </div>                
             </form>
-            
+            <form action="{% url 'main:table_data' %}" method="post" id="table-data">{%csrf_token%}</form>
         </div>
     </div>
 {%endblock%}
@@ -106,6 +130,11 @@
                             `+tasksString+`
                         </datalist>
                     </multi-input>
+
+                    <div class="title flex-center">
+                        <span>Задача может делаться параллельно </span>
+                        <input type="checkbox" name="parallel">
+                    </div>
                     <div class="blur"></div>  
                 
             `;
@@ -113,16 +142,100 @@
             multiSelectCounter++;
         }
 
+        function showTable(element){
+            if(tasks.length < 1){
+                alertify.error("Чтобы продолжить добавьте хотя бы одну задачу", 3)
+                return;
+            }
+            startLoading();
+
+            tableBlock = $("#table-block table")[0];            
+            thead = tableBlock.querySelector("thead");
+            tbody = tableBlock.querySelector("tbody");
+
+            workers = document.querySelector(".workers-block multi-input").getValues();
+
+            const csrftoken = document.querySelector('#table-data [name=csrfmiddlewaretoken]').value;
+
+            data = new FormData();
+            data.append("tasks",  JSON.stringify(tasks));
+            data.append("workers", JSON.stringify(workers));
+            data.append("csrfmiddlewaretoken", csrftoken);
+
+            var tableData = [];
+
+            // fetch("{%url 'main:table_data'%}", {
+            //     method: "POST",
+            //     body: data,
+            // }).then((res) => {
+            //     finishLoading();                                
+            //     tableData = res["data"];
+            //     console.log(tableData);
+            // });
+
+            $.ajax({
+                url: "{%url 'main:table_data'%}",
+                method: "post",                
+                data: {
+                    "tasks": JSON.stringify(tasks),
+                    "workers": JSON.stringify(workers),
+                    "csrfmiddlewaretoken": csrftoken
+                },
+                headers: { "X-CSRFToken": csrftoken},
+                processData: true,                
+            }).done(function(res){             
+                tableData = res["data"];
+                console.log(tableData);
+                
+                for(var i = 0; i < workers.length; i++){
+                    th = document.createElement("th");
+                    th.textContent = workers[i];
+                    thead.querySelector("tr").appendChild(th);
+                }
+
+                for(var i = 0; i < tasks.length; i++){
+                    tr = document.createElement("tr")
+                    tr.innerHTML = `
+                        <td>`+tasks[i]["name"]+`</td>
+                    `
+                    tbody.appendChild(tr);                
+                }
+                                
+                trs = document.querySelectorAll(".table-block table tbody tr");
+                for(var i = 0; i < trs.length; i++){
+                    for(var j = 0; j < tableData[i].length; j++){
+                        td = document.createElement("td")                        
+                        if(tableData[i][j] == false){
+                            td.classList.add("inactive");
+                        }                        
+                        td.innerHTML = `
+                            <input type="number" max="365" min="1">
+                        `
+                        trs[i].appendChild(td);
+                    }
+                }
+            });
+
+
+            $("#add-task")[0].remove();
+            $("#table-block")[0].classList.toggle("hide");
+            $("#submit-button")[0].classList.toggle("hide");
+            element.parentElement.classList.toggle("hide");
+
+            finishLoading();
+        }
+
         function deleteTask(element){
             taskBlock = element.parentElement;
             if(tasks.length == 1){
                 taskBlock.remove();
+                tasks = [];
                 return;    
             }
-            taskName = taskBlock.querySelector(".header-block input").value;
-            for(var i = 0; i < tasks.length; i++){
+            taskName = taskBlock.querySelector(".header-block input").value;            
+            for(var i = 0; i < tasks.length; i++){                
                 if(tasks[i]["name"] === taskName){
-                    tasks.splice(i, 1);
+                    tasks.splice(i);
                     break;
                 }
             }
@@ -155,11 +268,11 @@
             else if(taskBlock.children[5].getValues().length == 0){
                 alertify.error("Добавьте умения необходимые для выполнения задачи!", 5);
                 return;
-            }
+            }            
             task = {
                 "name": taskBlock.querySelector(".header-block input").value,
                 "description": taskBlock.querySelector("textarea.description").value,                
-                "technologies": taskBlock.children[5].getValues()
+                "technologies": taskBlock.children[5].getValues(),                
             };
             tasks.push(task);
             element.remove();
@@ -171,6 +284,13 @@
             }
             taskBlock.classList.add("saved");
             alertify.success("Задача сохранена!", 3);
+        }
+
+        function getIndexOf(name){
+            for(var i = 0; i < tasks.length; i++){
+                if(tasks[i]["name"] === name) return i;
+            }
+            return -1;
         }
 
         form =  $("#add_project")[0];
@@ -200,31 +320,77 @@
             }
             data = new FormData(form);            
             tasksBlocks = document.getElementsByClassName("task saved");            
-            //values = input.getValues();            
+                       
             currentTasks = [];
+            is_parallel_by_one = [];
+
             for(var i = 0; i < tasksBlocks.length; i++){
                 task = tasksBlocks[i];
+                parallel = task.querySelectorAll("input[name=parallel]")[0].checked;
+                if(parallel === true){
+                    is_parallel_by_one.push(i);
+                }
                 taskData = {
                     "name": task.children[1].children[0].value,                    
                     "description": task.children[2].value,
-                    "technologies": task.children[4].getValues()
+                    "technologies": task.children[4].getValues(),
+                    "can_solve_after": task.querySelectorAll("multi-input")[1].getValues(),                 
                 };
                 currentTasks.push(taskData);
             }
 
             workers = document.querySelector(".workers-block multi-input").getValues();
+            
+            matrix = [];
+            inputs = document.querySelectorAll(".table-block table input");
+            for(var j = 0; j < workers.length; j++){
+                matrix[j] = [];
+                for(var i = j, count = 0; i < inputs.length; i+=workers.length, count++){
+                    if(inputs[i].value == ''){
+                        matrix[j][count] = 9999;
+                    }else{
+                        matrix[j][count] = parseInt(inputs[i].value);
+                    }                    
+                }
+            }
+            console.log(matrix);
+
+            sequencing = [];
+            for(var i = 0; i < currentTasks.length; i++){
+                sequencing[i] = [];
+                for(var j = 0; j < currentTasks.length; j++){
+                    sequencing[i][j] = 0;
+                }
+            }
+
+            console.log(sequencing);
+            console.log(is_parallel_by_one);
+
+            for(var i = 0; i < currentTasks.length; i++){
+                for(var j = 0; j < currentTasks[i]["can_solve_after"].length; j++){
+                    index = getIndexOf(currentTasks[i]["can_solve_after"][j]);
+                    if(index >= 0){
+                        sequencing[index][i] = 1;
+                    }
+                }
+            }
 
 
             data.append("tasks",  JSON.stringify(currentTasks));
             data.append("workers", JSON.stringify(workers));
+            data.append("matrix", JSON.stringify(matrix));
+            data.append("parrallel_by_one", JSON.stringify(is_parallel_by_one));
+            data.append("sequencing", JSON.stringify(sequencing));
             fetch(form.action, {
                 method: form.method,
                 body: data,
             }).then((res) => {
-                finishLoading();
-                console.log(res);                
+                finishLoading();                              
                 alertify.success("Вы успешно добавили проект!", 5);
-            })
+            }).catch((err) => {
+                finishLoading();
+                alertify.error(err.message, 5);
+            });
             
         });
     </script>

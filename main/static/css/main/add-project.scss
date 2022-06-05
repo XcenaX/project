@@ -21,7 +21,7 @@ form.add-project{
         height: 10vw;
         padding: 1vw;
         font-size: 1vw;
-        margin-bottom: 2vw;        
+             
     }
     >.date-block{
         display: flex;
@@ -68,10 +68,23 @@ form.add-project{
             font-size: 1.2vw;
             font-weight: bold;
             margin-top: 2vw;
-            margin-bottom: 1vw;
+            margin-bottom: 1vw;            
         }
         .title.half{
             width: 50%;
+        }
+        .title.flex-center{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            input{
+                width: 1.5vw;
+                height: 1.5vw;
+                margin-left: 0.5vw;
+            }
+            span{
+                line-height: 1.5vw;                
+            }
         }
         .tasks{
             width: 100%;
@@ -168,4 +181,114 @@ form.add-project{
             cursor: pointer;
         }
     }
+    .table-block{
+        margin-top: 2vw;
+        margin-bottom: 2vw;
+
+        .title{
+            font-size: 1vw;
+            font-weight: bold;
+            margin-bottom: 1vw;
+        }
+        .text{
+            font-size: 0.8vw;
+            width: 50%;
+            text-align: justify;
+            margin-bottom: 1vw;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border: 0.1vw solid black;
+        }
+        
+        th,
+        td {
+            padding: 0;
+            background-color: rgba(255,255,255,0.2);
+            color: #fff;
+            border: 0.1vw solid black;
+            input{
+                border: none;
+                outline: none;
+                padding: 1vw;
+                width: 75%;
+                font-size: 1vw;
+                background-color: inherit;
+                margin: auto;
+                text-align: center;
+            }
+        }
+        
+        th {
+            text-align: left;
+        }
+
+        th.diagonal-th{
+            display: flex;
+            justify-content: space-between;
+            min-width: 12vw;
+            position: relative;
+
+            span.up{                
+                margin-bottom: 1vw;
+            }   
+            span.down{
+                margin-top: 1vw;
+            }
+        }
+        th.diagonal-th .line{
+            position: absolute;
+            height: 0;
+            padding: 0;
+            border-top: 0.1vw solid black;
+            width: 104%;
+            transform: rotate(13deg);
+            left: -2%;
+            top: 50%;
+        }
+
+        td.inactive{
+            background-color: gray;
+            input{
+                display: none;
+            }
+        }
+        
+        thead {
+            th {
+                background-color: #55608f;
+                text-align: center;
+                padding: 1vw;
+            }
+        }
+        
+        tbody {
+            tr {
+                &:hover {
+                    background-color: rgba(255,255,255,0.3);
+                }
+            }
+            td {
+                position: relative;
+                text-align: center;
+                color: black;
+                &:hover {
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        top: -9999px;
+                        bottom: -9999px;
+                        background-color: rgba(255,255,255,0.2);
+                        z-index: -1;
+                    }
+                }
+            }
+        }
+    }   
 }

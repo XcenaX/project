@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
+{% load sass_tags %}
 
 {%block projects%}active{%endblock%}
 {%block manager_projects%}active{%endblock%}
+
+
 
 {%block main%}
 <div class="content-wrap">        
@@ -26,7 +29,10 @@
         {%if projects|length > 0%}
                 {%for project in projects%}
                     <div class="task-block">
-                        <div class="delete-task" title="Удалить задачу" onclick="deleteProject(this)"></div>
+                        <form action="{%url 'main:delete_project' project.id%}" method="post" class="delete-form">{%csrf_token%}
+                            <input class="delete" title="Удалить проект" type="submit" value/>
+                        </form>
+                        
                         <div class="head-block" style="height: auto;">
                             <div class="left-side">
                                 <div class="title">{{project.name}}</div>                                
@@ -58,4 +64,29 @@
         
     </div>
 </div>
+{%endblock%}
+
+{%block scripts%}
+    <style>
+        form.delete-form{
+            text-align: right;
+        }
+        form.delete-form input{
+            background-size: 80%;
+            width: 2.5vw;
+            padding-bottom: 2.5vw;
+            height: 0;
+            border: none;
+            outline: none;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url({%static 'images/delete.png'%});
+            background-color: inherit;
+            position: absolute;
+            top: 0.5vw;
+            right: 0.5vw;
+            
+
+        }
+    </style>
 {%endblock%}
