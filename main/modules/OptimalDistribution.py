@@ -128,6 +128,32 @@ class OptimalDistribution():
         self.sequencing = sequencing
         self.parallel_by_one = parallel_by_one
 
+    def solve(self):
+        if self.data_matrix.shape[0] > self.data_matrix.shape[1]:
+            raise AssertionError from BaseException
+        f = self.hungarian(self.data_matrix)
+        assigned_tasks = [i[1] for i in f]
+        if self.data_matrix.shape[0] != self.data_matrix.shape[1]:
+            data_matrix_t = np.transpose(self.data_matrix)
+            for i in range(data_matrix_t.shape[0]):
+                if i not in assigned_tasks:
+                    for j in range(data_matrix_t.shape[1]):
+                        if i != j:
+                            if not self.is_sequential(i, j):
+                                if i in self.parallel_by_one and j in self.parallel_by_one:
+                                    if j in assigned_tasks:
+                                        for k in f:
+                                            if k[1] == j:
+                                                data_matrix_t[i][k[0]] = np.max(data_matrix_t[i] + 1)
+                    f.append((np.argmin(data_matrix_t[i]), i))
+                    assigned_tasks.append(i)
+        f = sorted(f, key=lambda lf: lf[1])
+        path_r = []
+        for i in f:
+            path_r.append(self.data_matrix[i])
+        days = self.calculating_days(path_r)
+        return [f, path_r, days]
+
     def reduce(self, source_matrix):
         # редукция по строкам
         w_matrix = np.copy(source_matrix)
@@ -140,7 +166,6 @@ class OptimalDistribution():
             w_matrix[i] -= np.min(w_matrix[i])
         w_matrix = np.transpose(w_matrix)
         return w_matrix
-
 
     def hungarian(self, source_matrix):
         modded_matrix = np.copy(source_matrix)
@@ -161,14 +186,12 @@ class OptimalDistribution():
                 mark_zero_modified.append(mark_zero[i])
         return mark_zero_modified
 
-
     def calculate(self, source_matrix, path):  # только для квадратных матриц
         result = 0
         print(path)
         for it in range(len(path)):
             result += source_matrix[path[it][0], path[it][1]]
         return result
-
 
     def find_path(self, current_matrix):
         # нахождение максимального паросочетания (максимальное количество работников на максимальное количество работ)
@@ -187,7 +210,6 @@ class OptimalDistribution():
             zero_matrix_marked[min_zeros_row, :] = False
             zero_matrix_marked[:, zero_index_col] = False
         return zero_matrix, mark_zero
-
 
     def mark_matrix(self, zero_matrix, mark_zero):
         # разметка матрицы
@@ -209,7 +231,6 @@ class OptimalDistribution():
                         check_switch = True
         marked_rows = list(set(range(zero_matrix.shape[0])) - set(non_marked_zero_rows))
         return marked_rows, marked_cols
-
 
     def adjust_matrix(self, current_matrix, marked_rows, marked_cols):
         # подстройка матрицы (добавление нулей)
@@ -241,34 +262,7 @@ class OptimalDistribution():
             for j in range(self.sequencing.shape[1]):
                 if self.sequencing[i][j] and sums[i] <= sums[j] + path_r[i]:
                     sums = np.insert(np.delete(sums, i), i, sums[j] + path_r[i])
-        return np.max(sums)
-    
-    def solve(self):
-        if self.data_matrix.shape[0] > self.data_matrix.shape[1]:
-            raise AssertionError from BaseException
-        f = self.hungarian(self.data_matrix)
-        assigned_tasks = [i[1] for i in f]
-        if self.data_matrix.shape[0] != self.data_matrix.shape[1]:
-            data_matrix_t = np.transpose(self.data_matrix)
-            for i in range(data_matrix_t.shape[0]):
-                if i not in assigned_tasks:
-                    for j in range(data_matrix_t.shape[1]):
-                        if i != j:
-                            if not self.is_sequential(i, j):
-                                if i in self.parallel_by_one and j in self.parallel_by_one:
-                                    if j in assigned_tasks:
-                                        for k in f:
-                                            if k[1] == j:
-                                                data_matrix_t[i][k[0]] = np.max(data_matrix_t[i] + 1)
-                    f.append((np.argmin(data_matrix_t[i]), i))
-                    assigned_tasks.append(i)
-        f = sorted(f, key=lambda lf: lf[1])
-        path_r = []
-        for i in f:
-            path_r.append(self.data_matrix[i])
-        days = self.calculating_days(path_r)
-        return [f, path_r, days]
-
+        return np.max(sums)        
 
     def is_sequential(self, u1, u2):
         if u1 > u2:
