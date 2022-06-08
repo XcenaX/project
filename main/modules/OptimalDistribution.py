@@ -130,7 +130,7 @@ class OptimalDistribution():
 
     def solve(self):
         if self.data_matrix.shape[0] > self.data_matrix.shape[1]:
-            raise AssertionError from BaseException
+            raise AssertionError("Ошибка!!!!") from BaseException
         f = self.hungarian(self.data_matrix)
         assigned_tasks = [i[1] for i in f]
         if self.data_matrix.shape[0] != self.data_matrix.shape[1]:
