@@ -176,14 +176,10 @@ class AddProjectView(View):
 
         parrallel_by_one = post_parameter(request, "parrallel_by_one")
         parrallel_by_one = json.loads(parrallel_by_one)
-        optimal = OptimalDistribution(matrix, sequencing, parrallel_by_one)
-        try:
-            answer = optimal.solve()
-        except Exception as e:
-            message = str(e)
-            print(message)
-            return JsonResponse({"error": message}, status=500)
-        print(answer, answer[2]) 
+        optimal = OptimalDistribution(matrix, sequencing, parrallel_by_one)        
+        answer = optimal.solve()                    
+        #return JsonResponse({"error": message}, status=500)
+        #print(answer, answer[2]) 
         
         model_tasks = []        
         model_workers = []
