@@ -66,13 +66,9 @@
                         </tbody>
                         
                     </table>
-                </div>
-                
-                <div style="text-align:-webkit-right;height: auto;">
-                    <div class="save" id="next-step" onclick="showTable(this);">Далее</div>
-                </div>
+                </div>                        
 
-                <div style="text-align:right;height: auto;" class="hide" id="submit-button">
+                <div style="text-align:right;height: auto;" id="submit-button">
                     <button class="save" type="submit">Сохранить</button>
                 </div>                
             </form>
@@ -141,19 +137,30 @@
                 
             `;
             tasksBlock.appendChild(task);
-            multiSelectCounter++;
+            multiSelectCounter++;            
         }
 
-        function showTable(element){
-            if(tasks.length < 1){
-                alertify.error("Чтобы продолжить добавьте хотя бы одну задачу", 3)
-                return;
-            }
+        function showTable(){
+            // if(tasks.length < 1){
+            //     alertify.error("Чтобы продолжить добавьте хотя бы одну задачу", 3)
+            //     return;
+            // }
             startLoading();
 
-            tableBlock = $("#table-block table")[0];            
-            thead = tableBlock.querySelector("thead");
-            tbody = tableBlock.querySelector("tbody");
+            $(".table-block table")[0].remove();
+            
+            tableBlock = document.createElement("table");            
+            thead = document.createElement("thead");
+            thead.innerHTML = `
+                <tr>
+                    <th class="diagonal-th crossed">
+                        <span class="down">Задачи</span>
+                        <span class="up">Сотрудники</span>                                    
+                    </th>
+                    
+                </tr>
+            `
+            tbody = document.createElement("tbody");
 
             workers = document.querySelector(".workers-block multi-input").getValues();
 
@@ -218,12 +225,12 @@
                 }
             });
 
-
-            $("#add-task")[0].remove();
-            $("#table-block")[0].classList.toggle("hide");
-            $("#submit-button")[0].classList.toggle("hide");
-            element.parentElement.classList.toggle("hide");
-
+            tableBlock.appendChild(thead);
+            tableBlock.appendChild(tbody);
+            if($("#table-block")[0].classList.contains("hide")){
+                $("#table-block")[0].classList.remove("hide");
+            }
+            $("#table-block")[0].appendChild(tableBlock);
             finishLoading();
         }
 
@@ -257,6 +264,9 @@
                     }
                 }
             }
+            if(taskBlock.classList.contains("saved")){
+                showTable();
+            }            
             alertify.error("Задача удалена!");
         }
 
@@ -285,6 +295,7 @@
                 taskBlock.children[6].children[0].disabled = true;
             }
             taskBlock.classList.add("saved");
+            showTable();
             alertify.success("Задача сохранена!", 3);
         }
 
@@ -386,9 +397,10 @@
             fetch(form.action, {
                 method: form.method,
                 body: data,
-            }).then((res) => {
+            }).then((res) => {                
                 finishLoading();                              
-                alertify.success("Вы успешно добавили проект!", 5);
+                if(res.status == 200) alertify.success("Вы успешно добавили проект!", 5);
+                else alertify.error("При добавлении проекта произошла ошибка!", 5)
             }).catch((err) => {
                 finishLoading();
                 alertify.error(err.message, 5);
