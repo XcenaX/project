@@ -179,8 +179,10 @@ class AddProjectView(View):
         optimal = OptimalDistribution(matrix, sequencing, parrallel_by_one)
         try:
             answer = optimal.solve()
+        except AssertionError as error:                        
+            return JsonResponse({"error": "Сотрудников больше чем задач(((("}, status=500)
         except Exception as error:                        
-            return JsonResponse({"error": str(error)}, status=500)
+            return JsonResponse({"error": error}, status=500)
         print(answer, answer[2]) 
         
         model_tasks = []        
