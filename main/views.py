@@ -180,7 +180,7 @@ class AddProjectView(View):
         try:
             answer = optimal.solve()
         except AssertionError as error:                        
-            return JsonResponse({"error": "Сотрудников больше чем задач(((("}, status=500)
+            return JsonResponse({"error": "Сотрудников больше чем задач(((("}, status=500, encoder=json.encoder.JSONEncoder)
         except Exception as error:                        
             return JsonResponse({"error": error}, status=500)
         print(answer, answer[2]) 
