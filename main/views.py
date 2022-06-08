@@ -180,7 +180,9 @@ class AddProjectView(View):
         try:
             answer = optimal.solve()
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            message = str(e)
+            print(message)
+            return JsonResponse({"error": message}, status=500)
         print(answer, answer[2]) 
         
         model_tasks = []        
